@@ -38,18 +38,21 @@ class Moon(object):
         self.platforms = []  # secondary platforms only
         self.is_logged = False
 
-    def init(self):
-        # we import configuration variables here to keep highest
-        # level of isolation without creating unnecessary globals
-        try:
-            from openquakeplatform.test.config import (
-                pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger)
-        except ImportError as exc:
-            sys.stderr.write(exc + "\n")
-            sys.exit("ERROR: config.py not found or incomplete. "
-                     "Copy config.py.tmpl in config.py and modify "
-                     "it properly or check if config.py.tmpl has "
-                     "any new fields.")
+    def init(self, config=None):
+        if Not config:
+            # we import configuration variables here to keep highest
+            # level of isolation without creating unnecessary globals
+            try:
+                from openquakeplatform.test.config import (
+                    pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger)
+            except ImportError as exc:
+                sys.stderr.write(exc + "\n")
+                sys.exit("ERROR: config.py not found or incomplete. "
+                         "Copy config.py.tmpl in config.py and modify "
+                         "it properly or check if config.py.tmpl has "
+                         "any new fields.")
+        else:
+            pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger = config
 
         self.debugger = pla_debugger
         self.driver = self.driver_create("firefox", self.debugger)
@@ -74,6 +77,7 @@ class Moon(object):
     @staticmethod
     def driver_create(name, debugger):
         from selenium import webdriver
+        sel_vers_maj = int(selenium.__version__.split('.')[0])
         if name == "firefox":
             fp = webdriver.FirefoxProfile()
             if debugger != "":
@@ -86,7 +90,12 @@ class Moon(object):
                                   True)
                 fp.set_preference("extensions.firebug.defaultPanelName",
                                   "console")
-            driver = webdriver.Firefox(firefox_profile=fp)
+            if sle_vers_maj > 2:
+                firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
+                firefox_capabilities['marionette'] = True
+                driver = webdriver.Firefox(firefox_profile=fp, capabilities=firefox_capabilities)
+            else:
+                driver = webdriver.Firefox(firefox_profile=fp)
         else:
             driver = None
 

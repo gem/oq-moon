@@ -20,7 +20,7 @@
 
 import nose
 
-from openquake.moon.failurecatcher import FailureCatcher
+from openquake.moon import FailureCatcher
 
 if __name__ == '__main__':
     nose.main(addplugins=[FailureCatcher()])
