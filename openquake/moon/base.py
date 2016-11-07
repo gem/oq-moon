@@ -39,11 +39,11 @@ class Moon(object):
         self.is_logged = False
 
     def init(self, config=None):
-        if Not config:
+        if not config:
             # we import configuration variables here to keep highest
             # level of isolation without creating unnecessary globals
             try:
-                from openquakeplatform.test.config import (
+                from openquake.taxonomy.test.config import (
                     pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger)
             except ImportError as exc:
                 sys.stderr.write(exc + "\n")
@@ -76,6 +76,7 @@ class Moon(object):
 
     @staticmethod
     def driver_create(name, debugger):
+        import selenium
         from selenium import webdriver
         sel_vers_maj = int(selenium.__version__.split('.')[0])
         if name == "firefox":
@@ -90,7 +91,7 @@ class Moon(object):
                                   True)
                 fp.set_preference("extensions.firebug.defaultPanelName",
                                   "console")
-            if sle_vers_maj > 2:
+            if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
                 driver = webdriver.Firefox(firefox_profile=fp, capabilities=firefox_capabilities)

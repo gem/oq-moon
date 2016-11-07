@@ -58,12 +58,12 @@ class FailureCatcher(Plugin):
             pass
 
     def addError(self, test, err):
-        from openquakeplatform.test import pla
+        from openquake.taxonomy.test import pla
         self.alert_manager(pla)
         pla.screenshot('%s_%s.png' % (self.prefix, test.id()))
 
     def addFailure(self, test, err):
-        from openquakeplatform.test import pla
+        from openquake.taxonomy.test import pla
         self.alert_manager(pla)
         pla.screenshot('%s_%s.png' % (self.prefix, test.id()))
 
