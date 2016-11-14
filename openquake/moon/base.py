@@ -39,7 +39,7 @@ class Moon(object):
         self.is_logged = False
 
     def init(self, config=None):
-        if Not config:
+        if not config:
             # we import configuration variables here to keep highest
             # level of isolation without creating unnecessary globals
             try:
@@ -66,9 +66,6 @@ class Moon(object):
 
         self.driver.maximize_window()
         self.main_window = None
-        while not self.main_window:
-            self.main_window = self.current_window_handle()
-
         time.sleep(5)
         if self.homepage_login():
             self.is_logged = True
@@ -76,6 +73,7 @@ class Moon(object):
 
     @staticmethod
     def driver_create(name, debugger):
+        import selenium
         from selenium import webdriver
         sel_vers_maj = int(selenium.__version__.split('.')[0])
         if name == "firefox":
@@ -90,7 +88,7 @@ class Moon(object):
                                   True)
                 fp.set_preference("extensions.firebug.defaultPanelName",
                                   "console")
-            if sle_vers_maj > 2:
+            if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
                 driver = webdriver.Firefox(firefox_profile=fp, capabilities=firefox_capabilities)
@@ -112,6 +110,13 @@ class Moon(object):
 
     def homepage_login(self):
         self.driver.get(self.basepath)
+        if not self.main_window:
+            self.main_window = self.current_window_handle()
+            try:
+                self.driver.switch_to_window(self.main_window)
+            except WebDriverException:
+                self.main_window = None
+
         # <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         #Sign in</a>
         inputs = self.driver.find_elements(By.XPATH, "//a[text()='Sign in']")
@@ -440,6 +445,7 @@ class Moon(object):
             self.switch_to_window(self.main_window)
 
     def windows_reset(self):
+        print self.driver.window_handles
         for handle in self.driver.window_handles:
             if handle == self.main_window:
                 continue
