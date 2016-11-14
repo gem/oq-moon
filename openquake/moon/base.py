@@ -43,7 +43,7 @@ class Moon(object):
             # we import configuration variables here to keep highest
             # level of isolation without creating unnecessary globals
             try:
-                from openquakeplatform.test.config import (
+                from moon_config import (
                     pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger)
             except ImportError as exc:
                 sys.stderr.write(exc + "\n")
