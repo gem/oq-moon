@@ -373,7 +373,7 @@ class Moon(object):
     def add_click_event(self):
         self.driver.execute_script('''
 
-    pla_click_show = function (x,y) {
+    window.pla_click_show = function (x,y) {
         var div = document.createElement("div");
         div.style.left = x+"px";
         div.style.top  = y+"px";
@@ -385,7 +385,7 @@ class Moon(object):
         document.body.appendChild(div);
     };
 
-    pla_click = function (x,y){
+    window.pla_click = function (x,y){
         var ev = document.createEvent("MouseEvent");
         var el = document.elementFromPoint(x,y);
         console.log(x,y);
@@ -402,7 +402,7 @@ class Moon(object):
         // pla_click_show(x,y);
     };
 
-    pla_click_doc = function (x,y){
+    window.pla_click_doc = function (x,y){
         var ev = document.createEvent("MouseEvent");
         ev.initMouseEvent(
             "click",
