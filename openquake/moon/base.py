@@ -445,7 +445,7 @@ class Moon(object):
             self.switch_to_window(self.main_window)
 
     def windows_reset(self):
-        print self.driver.window_handles
+        # print self.driver.window_handles
         for handle in self.driver.window_handles:
             if handle == self.main_window:
                 continue
