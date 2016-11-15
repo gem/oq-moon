@@ -41,7 +41,7 @@ class Moon(object):
         self.is_logged = False
 
     def primary_set(self):
-        self.__class__..__primary = self
+        self.__class__.__primary = self
 
     @classmethod
     def primary_get(cls):
