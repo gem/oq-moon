@@ -54,18 +54,22 @@ class FailureCatcher(Plugin):
             alert = pla.switch_to_alert()
             sys.stderr.write("Found alert during cleanup: [%s]\n" % alert.text)
             alert.accept()
-        except (NoAlertPresentException, UnexpectedAlertPresentException):
+        except (NoAlertPresentException, UnexpectedAlertPresentException, AttributeError):
             pass
 
     def addError(self, test, err):
-        from openquakeplatform.test import pla
-        self.alert_manager(pla)
-        pla.screenshot('%s_%s.png' % (self.prefix, test.id()))
+        from openquake.moon import Moon
+        primary = Moon.primary_get()
+        if primary is not None:
+            self.alert_manager(primary)
+            primary.screenshot('%s_%s.png' % (self.prefix, test.id()))
 
     def addFailure(self, test, err):
-        from openquakeplatform.test import pla
-        self.alert_manager(pla)
-        pla.screenshot('%s_%s.png' % (self.prefix, test.id()))
+        from openquake.moon import Moon
+        primary = Moon.primary_get()
+        if primary is not None:
+            self.alert_manager(primary)
+            primary.screenshot('%s_%s.png' % (self.prefix, test.id()))
 
     def describeTest(self, test):
         return "%s" % test.id()

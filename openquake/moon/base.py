@@ -20,11 +20,13 @@ import time
 import sys
 from utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
 
 
 class Moon(object):
     DT = 0.1
+    __primary = None
 
     def __init__(self, user=None, passwd=None, email=None):
 
@@ -38,7 +40,14 @@ class Moon(object):
         self.platforms = []  # secondary platforms only
         self.is_logged = False
 
-    def init(self, config=None):
+    def primary_set(self):
+        self.__class__..__primary = self
+
+    @classmethod
+    def primary_get(cls):
+        return(cls.__primary)
+
+    def init(self, landing="", config=None):
         if not config:
             # we import configuration variables here to keep highest
             # level of isolation without creating unnecessary globals
@@ -46,8 +55,8 @@ class Moon(object):
                 from moon_config import (
                     pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger)
             except ImportError as exc:
-                sys.stderr.write(exc + "\n")
-                sys.exit("ERROR: config.py not found or incomplete. "
+                sys.stderr.write(str(exc) + "\n")
+                sys.exit("ERROR: moon_config.py not found or incomplete. "
                          "Copy config.py.tmpl in config.py and modify "
                          "it properly or check if config.py.tmpl has "
                          "any new fields.")
@@ -66,10 +75,8 @@ class Moon(object):
 
         self.driver.maximize_window()
         self.main_window = None
-        time.sleep(5)
-        if self.homepage_login():
+        if self.homepage_login(landing=landing):
             self.is_logged = True
-        time.sleep(1)
 
     @staticmethod
     def driver_create(name, debugger):
@@ -108,8 +115,8 @@ class Moon(object):
         self.platforms.remove(pl)
         pl.fini()
 
-    def homepage_login(self):
-        self.driver.get(self.basepath)
+    def homepage_login(self, landing=""):
+        self.driver.get(self.basepath + landing)
         if not self.main_window:
             self.main_window = self.current_window_handle()
             try:
@@ -464,3 +471,4 @@ class Moon(object):
 
     def switch_to_window(self, handle):
         return self.driver.switch_to_window(handle)
+
