@@ -354,7 +354,7 @@ class Moon(object):
             time.sleep(postfind)
         return field[0]
 
-    def wait_new_page(self, element, url):
+    def wait_new_page(self, element, url, timeout=3):
         from selenium.common.exceptions import StaleElementReferenceException
 
         def link_has_gone_stale():
@@ -368,7 +368,7 @@ class Moon(object):
                     return True
                 else:
                     raise ValueError
-        wait_for(link_has_gone_stale)
+        wait_for(link_has_gone_stale, timeout=timeout)
 
     def screenshot(self, filename):
         if not self.driver:
