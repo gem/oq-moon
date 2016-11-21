@@ -150,6 +150,8 @@ class Moon(object):
             "//button[@type='submit' and text()='Sign in']")
         submit_button.click()
 
+        self.wait_new_page(submit_button, self.basepath + landing)
+
         inputs = self.driver.find_elements(By.XPATH, "//a[text()='Sign in']")
         if len(inputs) == 1:
             return False
