@@ -357,7 +357,7 @@ class Moon(object):
             time.sleep(postfind)
         return field[0]
 
-    def wait_new_page(self, element, url, timeout=3):
+    def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
 
         def link_has_gone_stale():
@@ -366,12 +366,39 @@ class Moon(object):
                 element.find_elements_by_id('doesnt-matter')
                 return False
             except StaleElementReferenceException:
-                if (self.driver.current_url == url
-                        or self.driver.current_url == (self.basepath + url)):
+                deslashed = self.driver.current_url.rstrip('/')
+                if (deslashed == url
+                    or deslashed == (self.basepath + url)):
                     return True
                 else:
-                    raise ValueError
+                    raise ValueError("expected %s or %s, received %s" % (
+                        url, self.basepath + url, deslashed))
         wait_for(link_has_gone_stale, timeout=timeout)
+
+    def wait_new_page_next(self, match, url, timeout=3.0):
+        start = time.time()
+        while True:
+            try:
+                element = self.xpath_finduniq(match)
+                break
+            except Exception as e:
+                print "except %s" % e
+                if time.time() - start < timeout:
+                    time.sleep(0.2)
+                else:
+                    raise TimeoutError
+
+    def wait_new_page(self, element, url, strategy="previous", timeout=3.0):
+        '''
+            'strategy' could be 'previous' or 'next'
+            if 'strategy' is 'previous' wait until the 'element' became invalid
+            elif 'strategy' is 'next' try to find a match to 'element' string
+            to exit with success
+        '''
+        if strategy == "previous":
+            return self.wait_new_page_previous(element, url, timeout=timeout)
+        elif strategy == "next":
+            return self.wait_new_page_next(element, url, timeout=timeout)
 
     def screenshot(self, filename):
         if not self.driver:
