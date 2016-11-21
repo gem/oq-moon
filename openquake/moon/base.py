@@ -290,7 +290,7 @@ class Moon(object):
         logout_button.click()
 
         #check new url
-        self.wait_new_page(logout_button, '/account/logout/')
+        self.wait_new_page(logout_button, '/account/logout')
 
         #<button class="btn btn-primary" type="submit">Log out</button>
         logout_button = self.xpath_finduniq(
@@ -322,7 +322,7 @@ class Moon(object):
             dest_button = self.xpath_finduniq("//a[@href='/%s/']" % dest)
 
         dest_button.click()
-        self.wait_new_page(dest_button, '/%s/' % dest)
+        self.wait_new_page(dest_button, '/%s' % dest)
 
     def get(self, url):
         self.driver.get(self.basepath + url)
