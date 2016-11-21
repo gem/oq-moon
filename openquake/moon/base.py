@@ -327,7 +327,9 @@ class Moon(object):
     def get(self, url):
         self.driver.get(self.basepath + url)
 
-    def xpath_finduniq(self, xpath_str, times=50, postfind=0.1):
+    def xpath_finduniq(self, xpath_str, times=50, postfind=0.1, timeout=None):
+        if timeout is not None:
+            times = int(timeout / postfind)
         for t in range(0, times):
             field = self.driver.find_elements(By.XPATH, xpath_str)
             if len(field) > 0:
