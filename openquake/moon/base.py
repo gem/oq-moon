@@ -266,10 +266,9 @@ class Moon(object):
         # try to find logout button (in the header)
         try:
             user_button = self.xpath_finduniq(
-                "//a[@href='#' and b[@class='caret']]")
+                "//a[@href='#' and b[@class='caret']]", timeout=0.2)
         except (TimeoutError, ValueError, NotUniqError):
             self.driver.get(self.basepath)
-            time.sleep(3)
             user_button = self.xpath_finduniq(
                 "//a[@href='#' and b[@class='caret']]")
 
