@@ -136,18 +136,19 @@ class Moon(object):
         #<input id="id_password" type="password" name="password">
         #<label class="checkbox">
         user_field = self.xpath_finduniq(
-            "//input[@id='id_username' and @type='text' "
-            "and @name='username']")
+            "//form[@class='%s']//input[@id='id_username' and @type='text' "
+            "and @name='username']" % ("sign-in" if landing == "" else "form-horizontal") )
         user_field.send_keys(self.user)
 
         passwd_field = self.xpath_finduniq(
-            "//input[@id='id_password' and @type='password' "
-            "and @name='password']")
+            "//form[@class='%s']//input[@id='id_password' and @type='password' "
+            "and @name='password']" % ("sign-in" if landing == "" else "form-horizontal") )
         passwd_field.send_keys(self.passwd)
 
         #<button class="btn pull-right" type="submit">Sign in</button>
         submit_button = self.xpath_finduniq(
-            "//button[@type='submit' and text()='Sign in']")
+            "//button[@type='submit' and text()='%s']" %
+            ("Sign in" if landing == "" else "Log in"))
         submit_button.click()
 
         self.wait_new_page(submit_button, self.basepath + landing)
