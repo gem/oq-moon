@@ -73,6 +73,8 @@ class Moon(object):
         if not self.email:
             self.email = pla_email
 
+        # screencast: comment maximize_window() line
+        # if you want to set a specific window size
         self.driver.maximize_window()
         self.main_window = None
         if self.homepage_login(landing=landing):
@@ -98,7 +100,14 @@ class Moon(object):
             if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
+
+                # screencast: the extension "Hide Tab Bar With One Tab" enable tab hiding if just one tab is opened
+                # fp.add_extension(extension="/home/nastasi/.mozilla/firefox/hd03qque.default/extensions/{e5bbc237-c99b-4ced-a061-0be27703295f}.xpi")
                 driver = webdriver.Firefox(firefox_profile=fp, capabilities=firefox_capabilities)
+
+                # screencast: set window position and size when required
+                # driver.set_window_position(0, 0)
+                # driver.set_window_size(1024, 742)
             else:
                 driver = webdriver.Firefox(firefox_profile=fp)
         else:
