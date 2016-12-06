@@ -77,8 +77,11 @@ class Moon(object):
         # if you want to set a specific window size
         self.driver.maximize_window()
         self.main_window = None
+
+        time.sleep(5)
         if self.homepage_login(landing=landing):
             self.is_logged = True
+        time.sleep(1)
 
     @staticmethod
     def driver_create(name, debugger):
