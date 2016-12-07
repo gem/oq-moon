@@ -78,10 +78,10 @@ class Moon(object):
         self.driver.maximize_window()
         self.main_window = None
 
-        time.sleep(5)
+        time.sleep(10)
         if self.homepage_login(landing=landing):
             self.is_logged = True
-        time.sleep(1)
+        time.sleep(5)
 
     @staticmethod
     def driver_create(name, debugger):
