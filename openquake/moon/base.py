@@ -28,7 +28,7 @@ class Moon(object):
     DT = 0.1
     __primary = None
 
-    def __init__(self, user=None, passwd=None, email=None):
+    def __init__(self, user=None, passwd=None, email=None, jqheavy=False):
 
         self.driver = None
         self.basepath = None
@@ -39,9 +39,13 @@ class Moon(object):
         self.users = []
         self.platforms = []  # secondary platforms only
         self.is_logged = False
+        self.jqheavy = jqheavy
 
     def primary_set(self):
         self.__class__.__primary = self
+
+    def jqheavy_set(self, value):
+        self.jqheavy = value
 
     @classmethod
     def primary_get(cls):
@@ -78,10 +82,10 @@ class Moon(object):
         self.driver.maximize_window()
         self.main_window = None
 
-        time.sleep(10)
+        time.sleep(5)
         if self.homepage_login(landing=landing):
             self.is_logged = True
-        time.sleep(5)
+        time.sleep(1)
 
     @staticmethod
     def driver_create(name, debugger):
@@ -118,8 +122,11 @@ class Moon(object):
 
         return driver
 
-    def platform_create(self, user, passwd):
-        pl = self.__class__(user, passwd)
+    def platform_create(self, user, passwd, jqheavy=None):
+        if jqheavy == None:
+            jqheavy = self.jqheavy
+
+        pl = self.__class__(user, passwd, jqheavy=jqheavy)
         self.platforms.append(pl)
         return pl
 
@@ -401,7 +408,7 @@ class Moon(object):
                 else:
                     raise TimeoutError
 
-    def wait_new_page(self, element, url, strategy="previous", timeout=3.0):
+    def wait_new_page(self, element, url, strategy="previous", jqheavy=None, timeout=3.0):
         '''
             'strategy' could be 'previous' or 'next'
             if 'strategy' is 'previous' wait until the 'element' became invalid
@@ -409,9 +416,38 @@ class Moon(object):
             to exit with success
         '''
         if strategy == "previous":
-            return self.wait_new_page_previous(element, url, timeout=timeout)
+            ret = self.wait_new_page_previous(element, url, timeout=timeout)
         elif strategy == "next":
-            return self.wait_new_page_next(element, url, timeout=timeout)
+            ret = self.wait_new_page_next(element, url, timeout=timeout)
+
+        if ret is not True:
+            return ret
+
+        if jqheavy is None:
+            jqheavy = self.jqheavy
+
+        if jqheavy is True:
+            iters = int(timeout * 10.0) + 1
+
+            for i in range(1, iters):
+                value = self.driver.execute_script("return (typeof(window.$) == 'function');")
+                if value is True:
+                    break
+                time.sleep(0.1)
+            else:
+                raise TimeoutError
+
+            self.driver.execute_script("window.$().ready(function() { window.gem_moon_is_finished = true });")
+            #  pla.driver.execute_script("window.jQuery().ready(function () { console.log('we are here'); });")
+            # time.sleep(10)
+            for i in range(1, iters):
+                value = self.driver.execute_script("return window.gem_moon_is_finished")
+                print "gem_moon: %s" % value
+                if value is True:
+                    break
+                time.sleep(0.1)
+            else:
+                raise TimeoutError
 
     def screenshot(self, filename):
         if not self.driver:
