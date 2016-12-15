@@ -124,6 +124,18 @@ class Moon(object):
 
         return driver
 
+    def wait_visibility(self, item, timeout=None):
+        if timeout is None:
+            timeout = self.TIMEOUT
+        start = time.time()
+
+        while item.is_displayed() is False:
+            if time.time() - start < timeout:
+                time.sleep(self.DT)
+            else:
+                raise TimeoutError
+        return True
+
     def platform_create(self, user, passwd, jqheavy=None):
         if jqheavy == None:
             jqheavy = self.jqheavy
