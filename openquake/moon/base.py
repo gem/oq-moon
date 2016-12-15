@@ -26,6 +26,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 class Moon(object):
     DT = 0.1
+    # standard waiting time before rise exception (in sec)
+    TIMEOUT = 5
     __primary = None
 
     def __init__(self, user=None, passwd=None, email=None, jqheavy=False):
@@ -347,9 +349,12 @@ class Moon(object):
     def get(self, url):
         self.driver.get(self.basepath + url)
 
-    def xpath_finduniq(self, xpath_str, times=50, postfind=0.1, timeout=None):
+    def xpath_finduniq(self, xpath_str, times=None, postfind=0, timeout=None):
         if timeout is not None:
-            times = int(timeout / postfind)
+            times = int(timeout / self.DT)
+        elif times is None:
+            times = int(self.TIMEOUT / self.DT)
+
         for t in range(0, times):
             field = self.driver.find_elements(By.XPATH, xpath_str)
             if len(field) > 0:
@@ -404,7 +409,7 @@ class Moon(object):
             except Exception as e:
                 print "except %s" % e
                 if time.time() - start < timeout:
-                    time.sleep(0.2)
+                    time.sleep(self.DT)
                 else:
                     raise TimeoutError
 
@@ -433,7 +438,7 @@ class Moon(object):
                 value = self.driver.execute_script("return (typeof(window.$) == 'function');")
                 if value is True:
                     break
-                time.sleep(0.1)
+                time.sleep(self.DT)
             else:
                 raise TimeoutError
 
@@ -445,7 +450,7 @@ class Moon(object):
                 print "gem_moon: %s" % value
                 if value is True:
                     break
-                time.sleep(0.1)
+                time.sleep(self.DT)
             else:
                 raise TimeoutError
 
