@@ -410,7 +410,7 @@ class Moon(object):
                 else:
                     raise ValueError("expected %s or %s, received %s" % (
                         url, self.basepath + url, deslashed))
-        wait_for(link_has_gone_stale, timeout=timeout)
+        return wait_for(link_has_gone_stale, timeout=timeout)
 
     def wait_new_page_next(self, match, url, timeout=3.0):
         start = time.time()
@@ -424,6 +424,7 @@ class Moon(object):
                     time.sleep(self.DT)
                 else:
                     raise TimeoutError
+        return True
 
     def wait_new_page(self, element, url, strategy="previous", jqheavy=None, timeout=3.0):
         '''
