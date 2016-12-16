@@ -460,7 +460,6 @@ class Moon(object):
             # time.sleep(10)
             for i in range(1, iters):
                 value = self.driver.execute_script("return window.gem_moon_is_finished")
-                print "gem_moon: %s" % value
                 if value is True:
                     break
                 time.sleep(self.DT)
