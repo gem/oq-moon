@@ -17,6 +17,7 @@
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
 __version__ = "0.3.0"
-__all__ = ['FailureCatcher', 'Moon']
+__all__ = ['FailureCatcher', 'Moon', 'TimeoutError', 'NotUniqError']
 from base import Moon
+from utils import TimeoutError, NotUniqError
 from failurecatcher import FailureCatcher

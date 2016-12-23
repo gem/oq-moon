@@ -26,9 +26,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 class Moon(object):
     DT = 0.1
+    # standard waiting time before rise exception (in sec)
+    TIMEOUT = 5
     __primary = None
 
-    def __init__(self, user=None, passwd=None, email=None):
+    def __init__(self, user=None, passwd=None, email=None, jqheavy=False):
 
         self.driver = None
         self.basepath = None
@@ -39,9 +41,13 @@ class Moon(object):
         self.users = []
         self.platforms = []  # secondary platforms only
         self.is_logged = False
+        self.jqheavy = jqheavy
 
     def primary_set(self):
         self.__class__.__primary = self
+
+    def jqheavy_set(self, value):
+        self.jqheavy = value
 
     @classmethod
     def primary_get(cls):
@@ -73,10 +79,15 @@ class Moon(object):
         if not self.email:
             self.email = pla_email
 
+        # screencast: comment maximize_window() line
+        # if you want to set a specific window size
         self.driver.maximize_window()
         self.main_window = None
+
+        time.sleep(5)
         if self.homepage_login(landing=landing):
             self.is_logged = True
+        time.sleep(1)
 
     @staticmethod
     def driver_create(name, debugger):
@@ -98,7 +109,14 @@ class Moon(object):
             if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
+
+                # screencast: the extension "Hide Tab Bar With One Tab" enable tab hiding if just one tab is opened
+                # fp.add_extension(extension="/home/nastasi/.mozilla/firefox/hd03qque.default/extensions/{e5bbc237-c99b-4ced-a061-0be27703295f}.xpi")
                 driver = webdriver.Firefox(firefox_profile=fp, capabilities=firefox_capabilities)
+
+                # screencast: set window position and size when required
+                # driver.set_window_position(0, 0)
+                # driver.set_window_size(1024, 742)
             else:
                 driver = webdriver.Firefox(firefox_profile=fp)
         else:
@@ -106,8 +124,23 @@ class Moon(object):
 
         return driver
 
-    def platform_create(self, user, passwd):
-        pl = self.__class__(user, passwd)
+    def wait_visibility(self, item, timeout=None):
+        if timeout is None:
+            timeout = self.TIMEOUT
+        start = time.time()
+
+        while item.is_displayed() is False:
+            if time.time() - start < timeout:
+                time.sleep(self.DT)
+            else:
+                raise TimeoutError
+        return True
+
+    def platform_create(self, user, passwd, jqheavy=None):
+        if jqheavy == None:
+            jqheavy = self.jqheavy
+
+        pl = self.__class__(user, passwd, jqheavy=jqheavy)
         self.platforms.append(pl)
         return pl
 
@@ -136,19 +169,22 @@ class Moon(object):
         #<input id="id_password" type="password" name="password">
         #<label class="checkbox">
         user_field = self.xpath_finduniq(
-            "//input[@id='id_username' and @type='text' "
-            "and @name='username']")
+            "//form[@class='%s']//input[@id='id_username' and @type='text' "
+            "and @name='username']" % ("sign-in" if landing == "" else "form-horizontal") )
         user_field.send_keys(self.user)
 
         passwd_field = self.xpath_finduniq(
-            "//input[@id='id_password' and @type='password' "
-            "and @name='password']")
+            "//form[@class='%s']//input[@id='id_password' and @type='password' "
+            "and @name='password']" % ("sign-in" if landing == "" else "form-horizontal") )
         passwd_field.send_keys(self.passwd)
 
         #<button class="btn pull-right" type="submit">Sign in</button>
         submit_button = self.xpath_finduniq(
-            "//button[@type='submit' and text()='Sign in']")
+            "//button[@type='submit' and text()='%s']" %
+            ("Sign in" if landing == "" else "Log in"))
         submit_button.click()
+
+        self.wait_new_page(submit_button, self.basepath + landing)
 
         inputs = self.driver.find_elements(By.XPATH, "//a[text()='Sign in']")
         if len(inputs) == 1:
@@ -264,10 +300,9 @@ class Moon(object):
         # try to find logout button (in the header)
         try:
             user_button = self.xpath_finduniq(
-                "//a[@href='#' and b[@class='caret']]")
+                "//a[@href='#' and b[@class='caret']]", timeout=0.2)
         except (TimeoutError, ValueError, NotUniqError):
             self.driver.get(self.basepath)
-            time.sleep(3)
             user_button = self.xpath_finduniq(
                 "//a[@href='#' and b[@class='caret']]")
 
@@ -289,7 +324,7 @@ class Moon(object):
         logout_button.click()
 
         #check new url
-        self.wait_new_page(logout_button, '/account/logout/')
+        self.wait_new_page(logout_button, '/account/logout')
 
         #<button class="btn btn-primary" type="submit">Log out</button>
         logout_button = self.xpath_finduniq(
@@ -321,12 +356,17 @@ class Moon(object):
             dest_button = self.xpath_finduniq("//a[@href='/%s/']" % dest)
 
         dest_button.click()
-        self.wait_new_page(dest_button, '/%s/' % dest)
+        self.wait_new_page(dest_button, '/%s' % dest)
 
     def get(self, url):
         self.driver.get(self.basepath + url)
 
-    def xpath_finduniq(self, xpath_str, times=50, postfind=0.1):
+    def xpath_finduniq(self, xpath_str, times=None, postfind=0, timeout=None):
+        if timeout is not None:
+            times = int(timeout / self.DT)
+        elif times is None:
+            times = int(self.TIMEOUT / self.DT)
+
         for t in range(0, times):
             field = self.driver.find_elements(By.XPATH, xpath_str)
             if len(field) > 0:
@@ -354,7 +394,7 @@ class Moon(object):
             time.sleep(postfind)
         return field[0]
 
-    def wait_new_page(self, element, url, timeout=3):
+    def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
 
         def link_has_gone_stale():
@@ -363,12 +403,68 @@ class Moon(object):
                 element.find_elements_by_id('doesnt-matter')
                 return False
             except StaleElementReferenceException:
-                if (self.driver.current_url == url
-                        or self.driver.current_url == (self.basepath + url)):
+                deslashed = self.driver.current_url.rstrip('/')
+                if (deslashed == url
+                    or deslashed == (self.basepath + url)):
                     return True
                 else:
-                    raise ValueError
-        wait_for(link_has_gone_stale, timeout=timeout)
+                    raise ValueError("expected %s or %s, received %s" % (
+                        url, self.basepath + url, deslashed))
+        return wait_for(link_has_gone_stale, timeout=timeout)
+
+    def wait_new_page_next(self, match, url, timeout=3.0):
+        start = time.time()
+        while True:
+            try:
+                element = self.xpath_finduniq(match)
+                break
+            except Exception as e:
+                print "except %s" % e
+                if time.time() - start < timeout:
+                    time.sleep(self.DT)
+                else:
+                    raise TimeoutError
+        return True
+
+    def wait_new_page(self, element, url, strategy="previous", jqheavy=None, timeout=3.0):
+        '''
+            'strategy' could be 'previous' or 'next'
+            if 'strategy' is 'previous' wait until the 'element' became invalid
+            elif 'strategy' is 'next' try to find a match to 'element' string
+            to exit with success
+        '''
+        if strategy == "previous":
+            ret = self.wait_new_page_previous(element, url, timeout=timeout)
+        elif strategy == "next":
+            ret = self.wait_new_page_next(element, url, timeout=timeout)
+
+        if ret is not True:
+            return ret
+
+        if jqheavy is None:
+            jqheavy = self.jqheavy
+
+        if jqheavy is True:
+            iters = int(timeout * 10.0) + 1
+
+            for i in range(1, iters):
+                value = self.driver.execute_script("return (typeof(window.$) == 'function');")
+                if value is True:
+                    break
+                time.sleep(self.DT)
+            else:
+                raise TimeoutError
+
+            self.driver.execute_script("window.$().ready(function() { window.gem_moon_is_finished = true });")
+            #  pla.driver.execute_script("window.jQuery().ready(function () { console.log('we are here'); });")
+            # time.sleep(10)
+            for i in range(1, iters):
+                value = self.driver.execute_script("return window.gem_moon_is_finished")
+                if value is True:
+                    break
+                time.sleep(self.DT)
+            else:
+                raise TimeoutError
 
     def screenshot(self, filename):
         if not self.driver:
