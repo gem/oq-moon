@@ -17,7 +17,7 @@
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
 import time
-import sys
+import sys, os
 from utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
@@ -42,6 +42,7 @@ class Moon(object):
         self.platforms = []  # secondary platforms only
         self.is_logged = False
         self.jqheavy = jqheavy
+        self.stats_on = 'OQ_MOON_STATS' in os.environ
 
     def primary_set(self):
         self.__class__.__primary = self
@@ -433,10 +434,17 @@ class Moon(object):
             elif 'strategy' is 'next' try to find a match to 'element' string
             to exit with success
         '''
+        start = 0
+        if self.stats_on:
+            start = time.time()
+
         if strategy == "previous":
             ret = self.wait_new_page_previous(element, url, timeout=timeout)
         elif strategy == "next":
             ret = self.wait_new_page_next(element, url, timeout=timeout)
+
+        if self.stats_on:
+            print "STATS: waited %g secs for [%s] with strategy %s" % (time.time() - start, url, strategy)
 
         if ret is not True:
             return ret
