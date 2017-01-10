@@ -456,14 +456,14 @@ class Moon(object):
             iters = int(timeout * 10.0) + 1
 
             for i in range(1, iters):
-                value = self.driver.execute_script("return (typeof(window.$) == 'function');")
+                value = self.driver.execute_script("return(typeof(window.jQuery) == 'function');")
                 if value is True:
                     break
                 time.sleep(self.DT)
             else:
                 raise TimeoutError
 
-            self.driver.execute_script("window.$().ready(function() { window.gem_moon_is_finished = true });")
+            self.driver.execute_script("window.jQuery().ready(function() { window.gem_moon_is_finished = true });")
             #  pla.driver.execute_script("window.jQuery().ready(function () { console.log('we are here'); });")
             # time.sleep(10)
             for i in range(1, iters):
