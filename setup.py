@@ -55,7 +55,6 @@ setup(
     install_requires=[
         'selenium'
     ],
-    scripts=['bin/nose_runner.py'],
     author='GEM Foundation',
     author_email='devops@openquake.org',
     maintainer='GEM Foundation',
