@@ -395,6 +395,19 @@ class Moon(object):
             time.sleep(postfind)
         return field[0]
 
+    def xpath_finduniq_coords(self, xpath_str, times=None, postfind=0, timeout=None):
+        for i in range(1,15):
+            try:
+                tail_ptr = self.xpath_finduniq(xpath_str, times, postfind, timeout)
+
+                x = tail_ptr.location['x']
+                y = tail_ptr.location['y']
+                break
+            except:
+                time.sleep(0.2)
+
+        return (tail_ptr, x, y)
+
     def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
 
