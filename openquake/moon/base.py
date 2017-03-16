@@ -406,7 +406,7 @@ class Moon(object):
             except:
                 time.sleep(0.2)
 
-        return (x,y)
+        return (tail_ptr, x, y)
 
     def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
