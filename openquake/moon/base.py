@@ -176,7 +176,6 @@ class Moon(object):
         passwd_field = self.xpath_finduniq(
             "//form[@class='%s']//input[@id='id_password' and @type='password' "
             "and @name='password']" % ("form-signin" if landing == "" else "form-horizontal") )
-        self.wait_visibility(passwd_field, 2)
         passwd_field.send_keys(self.passwd)
 
         #<button class="btn pull-right" type="submit">Sign in</button>
