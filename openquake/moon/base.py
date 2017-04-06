@@ -160,10 +160,8 @@ class Moon(object):
 
         # <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         #Sign in</a>
-        inputs = self.driver.find_elements(By.XPATH, "//a[text()='Sign in']")
-        if len(inputs) != 1:
-            return False
-        inputs[0].click()
+        input = self.xpath_finduniq("//a[normalize-space(text()) = 'Sign in']")
+        input.click()
 
         #<input id="id_username" type="text" name="username">
         #<label for="id_password">Password:</label>
@@ -171,12 +169,14 @@ class Moon(object):
         #<label class="checkbox">
         user_field = self.xpath_finduniq(
             "//form[@class='%s']//input[@id='id_username' and @type='text' "
-            "and @name='username']" % ("sign-in" if landing == "" else "form-horizontal") )
+            "and @name='username']" % ("form-signin" if landing == "" else "form-horizontal") )
+        self.wait_visibility(user_field, 2)
         user_field.send_keys(self.user)
 
         passwd_field = self.xpath_finduniq(
             "//form[@class='%s']//input[@id='id_password' and @type='password' "
-            "and @name='password']" % ("sign-in" if landing == "" else "form-horizontal") )
+            "and @name='password']" % ("form-signin" if landing == "" else "form-horizontal") )
+        self.wait_visibility(passwd_field, 2)
         passwd_field.send_keys(self.passwd)
 
         #<button class="btn pull-right" type="submit">Sign in</button>
