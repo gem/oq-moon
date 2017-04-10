@@ -167,15 +167,27 @@ class Moon(object):
         #<label for="id_password">Password:</label>
         #<input id="id_password" type="password" name="password">
         #<label class="checkbox">
-        user_field = self.xpath_finduniq(
-            "//form[@class='%s']//input[@id='id_username' and @type='text' "
-            "and @name='username']" % ("form-signin" if landing == "" else "form-horizontal") )
-        self.wait_visibility(user_field, 2)
+        try:
+            user_field = self.xpath_finduniq(
+                "//form[@class='%s']//input[@id='id_username' and @type='text' "
+                "and @name='username']" % ("signin" if landing == "" else "form-horizontal"))
+        except (TimeoutError, ValueError, NotUniqError):
+            user_field = self.xpath_finduniq(
+                "//form[@class='%s']//input[@id='id_username' and @type='text' "
+                "and @name='username']" % ("form-signin" if landing == "" else "form-horizontal"))
+        self.wait_visibility(user_field, 1)
         user_field.send_keys(self.user)
+        print 'dentro homepage_login4'
 
-        passwd_field = self.xpath_finduniq(
-            "//form[@class='%s']//input[@id='id_password' and @type='password' "
-            "and @name='password']" % ("form-signin" if landing == "" else "form-horizontal") )
+        try:
+            passwd_field = self.xpath_finduniq(
+                "//form[@class='%s']//input[@id='id_password' and @type='password' "
+                "and @name='password']" % ("signin" if landing == "" else "form-horizontal"))
+        except (TimeoutError, ValueError, NotUniqError):
+            passwd_field = self.xpath_finduniq(
+                "//form[@class='%s']//input[@id='id_password' and @type='password' "
+                "and @name='password']" % ("form-signin" if landing == "" else "form-horizontal"))
+        self.wait_visibility(passwd_field, 1)
         passwd_field.send_keys(self.passwd)
 
         #<button class="btn pull-right" type="submit">Sign in</button>
