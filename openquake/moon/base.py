@@ -175,6 +175,7 @@ class Moon(object):
             user_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_username' and @type='text' "
                 "and @name='username']" % ("form-signin" if landing == "" else "form-horizontal"))
+        
         self.wait_visibility(user_field, 1)
         user_field.send_keys(self.user)
         print 'dentro homepage_login4'
@@ -187,6 +188,7 @@ class Moon(object):
             passwd_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_password' and @type='password' "
                 "and @name='password']" % ("form-signin" if landing == "" else "form-horizontal"))
+        
         self.wait_visibility(passwd_field, 1)
         passwd_field.send_keys(self.passwd)
 
