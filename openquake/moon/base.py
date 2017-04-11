@@ -170,20 +170,19 @@ class Moon(object):
         try:
             user_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_username' and @type='text' "
-                "and @name='username']" % ("signin" if landing == "" else "form-horizontal"))
+                "and @name='username']" % ("sign-in" if landing == "" else "fmrm-horizontal"))
         except (TimeoutError, ValueError, NotUniqError):
             user_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_username' and @type='text' "
                 "and @name='username']" % ("form-signin" if landing == "" else "form-horizontal"))
         
-        self.wait_visibility(user_field, 1)
+        self.wait_visibility(user_field, 2)
         user_field.send_keys(self.user)
-        print 'dentro homepage_login4'
 
         try:
             passwd_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_password' and @type='password' "
-                "and @name='password']" % ("signin" if landing == "" else "form-horizontal"))
+                "and @name='password']" % ("sign-in" if landing == "" else "form-horizontal"))
         except (TimeoutError, ValueError, NotUniqError):
             passwd_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_password' and @type='password' "
@@ -316,9 +315,9 @@ class Moon(object):
             user_button = self.xpath_finduniq(
                 "//a[@href='#' and normalize-space(@class='dropdown-toggle')]", timeout=0.2)
         except (TimeoutError, ValueError, NotUniqError):
-            self.driver.get(self.basepath)
+            #self.driver.get(self.basepath)
             user_button = self.xpath_finduniq(
-                "//a[@href='#' and normalize-space(@class='dropdown-toggle')]")
+                "//a[@href='#' and b[@class='caret']]")
 
         #<a class="dropdown-toggle" data-toggle="dropdown" href="#">
         #nastasi
