@@ -170,7 +170,7 @@ class Moon(object):
         try:
             user_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_username' and @type='text' "
-                "and @name='username']" % ("sign-in" if landing == "" else "fmrm-horizontal"))
+                "and @name='username']" % ("sign-in" if landing == "" else "form-horizontal"))
         except (TimeoutError, ValueError, NotUniqError):
             user_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_username' and @type='text' "
