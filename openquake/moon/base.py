@@ -160,23 +160,35 @@ class Moon(object):
 
         # <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         #Sign in</a>
-        inputs = self.driver.find_elements(By.XPATH, "//a[text()='Sign in']")
-        if len(inputs) != 1:
-            return False
-        inputs[0].click()
+        input = self.xpath_finduniq("//a[normalize-space(text()) = 'Sign in']")
+        input.click()
 
         #<input id="id_username" type="text" name="username">
         #<label for="id_password">Password:</label>
         #<input id="id_password" type="password" name="password">
         #<label class="checkbox">
-        user_field = self.xpath_finduniq(
-            "//form[@class='%s']//input[@id='id_username' and @type='text' "
-            "and @name='username']" % ("sign-in" if landing == "" else "form-horizontal") )
+        try:
+            user_field = self.xpath_finduniq(
+                "//form[@class='%s']//input[@id='id_username' and @type='text' "
+                "and @name='username']" % ("sign-in" if landing == "" else "form-horizontal"))
+        except (TimeoutError, ValueError, NotUniqError):
+            user_field = self.xpath_finduniq(
+                "//form[@class='%s']//input[@id='id_username' and @type='text' "
+                "and @name='username']" % ("form-signin" if landing == "" else "form-horizontal"))
+        
+        self.wait_visibility(user_field, 2)
         user_field.send_keys(self.user)
 
-        passwd_field = self.xpath_finduniq(
-            "//form[@class='%s']//input[@id='id_password' and @type='password' "
-            "and @name='password']" % ("sign-in" if landing == "" else "form-horizontal") )
+        try:
+            passwd_field = self.xpath_finduniq(
+                "//form[@class='%s']//input[@id='id_password' and @type='password' "
+                "and @name='password']" % ("sign-in" if landing == "" else "form-horizontal"))
+        except (TimeoutError, ValueError, NotUniqError):
+            passwd_field = self.xpath_finduniq(
+                "//form[@class='%s']//input[@id='id_password' and @type='password' "
+                "and @name='password']" % ("form-signin" if landing == "" else "form-horizontal"))
+        
+        self.wait_visibility(passwd_field, 1)
         passwd_field.send_keys(self.passwd)
 
         #<button class="btn pull-right" type="submit">Sign in</button>
@@ -301,9 +313,9 @@ class Moon(object):
         # try to find logout button (in the header)
         try:
             user_button = self.xpath_finduniq(
-                "//a[@href='#' and b[@class='caret']]", timeout=0.2)
+                "//a[@href='#' and normalize-space(@class='dropdown-toggle')]", timeout=0.2)
         except (TimeoutError, ValueError, NotUniqError):
-            self.driver.get(self.basepath)
+            #self.driver.get(self.basepath)
             user_button = self.xpath_finduniq(
                 "//a[@href='#' and b[@class='caret']]")
 
