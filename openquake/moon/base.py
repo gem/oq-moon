@@ -86,10 +86,8 @@ class Moon(object):
         self.main_window = None
 
         time.sleep(5)
-        if autologin:
-            if self.homepage_login(landing=landing):
-                self.is_logged = True
-            time.sleep(1)
+        self.homepage_login(landing=landing, autologin=autologin)
+        time.sleep(1)
 
     @staticmethod
     def driver_create(name, debugger):
@@ -150,7 +148,7 @@ class Moon(object):
         self.platforms.remove(pl)
         pl.fini()
 
-    def homepage_login(self, landing=""):
+    def homepage_login(self, landing="", autologin=True):
         self.driver.get(self.basepath + landing)
         if not self.main_window:
             self.main_window = self.current_window_handle()
@@ -158,6 +156,9 @@ class Moon(object):
                 self.driver.switch_to_window(self.main_window)
             except WebDriverException:
                 self.main_window = None
+
+        if not autologin:
+            return True
 
         # <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         #Sign in</a>
@@ -176,7 +177,7 @@ class Moon(object):
             user_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_username' and @type='text' "
                 "and @name='username']" % ("form-signin" if landing == "" else "form-horizontal"))
-        
+
         self.wait_visibility(user_field, 2)
         user_field.send_keys(self.user)
 
@@ -188,7 +189,7 @@ class Moon(object):
             passwd_field = self.xpath_finduniq(
                 "//form[@class='%s']//input[@id='id_password' and @type='password' "
                 "and @name='password']" % ("form-signin" if landing == "" else "form-horizontal"))
-        
+
         self.wait_visibility(passwd_field, 1)
         passwd_field.send_keys(self.passwd)
 
@@ -204,6 +205,7 @@ class Moon(object):
         if len(inputs) == 1:
             return False
         else:
+            self.is_logged = True
             return True
 
     def waituntil(self, delay, action):
