@@ -54,7 +54,7 @@ class Moon(object):
     def primary_get(cls):
         return(cls.__primary)
 
-    def init(self, landing="", config=None):
+    def init(self, landing="", config=None, autologin=True):
         if not config:
             # we import configuration variables here to keep highest
             # level of isolation without creating unnecessary globals
@@ -86,9 +86,10 @@ class Moon(object):
         self.main_window = None
 
         time.sleep(5)
-        if self.homepage_login(landing=landing):
-            self.is_logged = True
-        time.sleep(1)
+        if autologin:
+            if self.homepage_login(landing=landing):
+                self.is_logged = True
+            time.sleep(1)
 
     @staticmethod
     def driver_create(name, debugger):
