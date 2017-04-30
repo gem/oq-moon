@@ -30,7 +30,7 @@ exec_test () {
     cp $GEM_GIT_PACKAGE/openquake/moon/test/config/moon_config.py.tmpl $GEM_GIT_PACKAGE/openquake/moon/test/config/moon_config.py
     export DISPLAY=:1
     export PYTHONPATH=$GEM_GIT_PACKAGE:$GEM_GIT_PACKAGE/openquake/moon/test/config
-    python -m openquake.moon.nose_runner --failurecatcher dev -s -v --with-xunit --xunit-file=xunit-platform-dev.xml $GEM_GIT_PACKAGE/openquake/dev/test || true
+    python -m openquake.moon.nose_runner --failurecatcher dev -s -v --with-xunit --xunit-file=xunit-platform-dev.xml $GEM_GIT_PACKAGE/openquake/moon/test || true
     # sleep 40000 || true
 }
 
