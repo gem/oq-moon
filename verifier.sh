@@ -346,7 +346,7 @@ fi
 while [ $# -gt 0 ]; do
     case $1 in
         devtest)
-            if [ $# -lt 3 ]; then
+            if [ $# -ne 2 ]; then
                 usage 1
             fi
             ACTION="$1"
