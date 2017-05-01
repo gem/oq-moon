@@ -6,7 +6,7 @@ import threading
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 from BaseHTTPServer import HTTPServer
 
-PUBLIC_DIRECTORY = os.path.join('openquake', 'moon', 'test', 'webpages')
+PUBLIC_DIRECTORY = os.path.join(os.path.dirname(__file__), 'webpages')
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
