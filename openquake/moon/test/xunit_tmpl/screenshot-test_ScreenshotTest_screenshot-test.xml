@@ -1,3 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="1" errors="0" failures="0" skip="0"><testcase classname="openquake.moon.test.screenshot_test.ScreenshotTest" name="screenshot_test" time="#FLOAT_SEC_TIME#"><system-out><![CDATA[PATH: [/screenshot_test.html]
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="1" errors="0" failures="0" skip="0"><testcase classname="openquake.moon.test.screenshot_test.ScreenshotTest" name="screenshot_test" time="#FLOAT_SEC_TIME#"><system-out><![CDATA[This is a fake report!
+You can see it because the failure test to trigger a screenshot works,
+look the artifacts to see it.
+PATH: [/screenshot_test.html]
 ]]></system-out><system-err><![CDATA[127.0.0.1 - - [#DD/MM/YYYY HH:MM:SS#] "GET /screenshot_test.html HTTP/1.1" 200 -
 ]]></system-err></testcase></testsuite>
