@@ -37,7 +37,7 @@ exec_test () {
         time_begin="$(date +%s%N)"
         python -m openquake.moon.nose_runner --failurecatcher dev-neg -s -v -a 'negate' --with-xunit --xunit-file=xunit-moon-dev-neg.xml "$GEM_GIT_PACKAGE/openquake/moon/test/${negate_file}.py" || true
         time_end="$(date +%s%N)"
-        float_sec_time="$(echo "($time_end - $time_begin) / 1000000000" | bc -l | sed 's/\.\([0-9]\{6\}\).*$/.\1/g')"
+        float_sec_time="$(echo "($time_end - $time_begin) / 1000000000" | bc -l | sed 's/\.\([0-9]\{3\}\).*$/.\1/g')"
         if [ ! -f  dev-neg_openquake.moon.test.*.${negate_file}.png ]; then
             echo "Expected file [dev-neg_openquake.moon.test.*.${negate_file}.png] not found"
             err=1
