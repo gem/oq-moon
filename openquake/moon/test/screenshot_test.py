@@ -8,4 +8,4 @@ class ScreenshotTest(unittest.TestCase):
     def screenshot_test(self):
         pla.get('/screenshot_test.html')
 
-        pla.xpath_finduniq("//impossible']", 1, 1)
+        pla.xpath_finduniq("//impossible", 1, 1)

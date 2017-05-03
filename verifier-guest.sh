@@ -43,7 +43,7 @@ exec_test () {
             err=1
             break
         else
-            filename="$(ls "dev-neg_openquake.moon.test.*.${negate_file}.png")"
+            filename="$(ls dev-neg_openquake.moon.test.*.${negate_file}.png)"
             xml_out="$(echo "$filename" | sed 's/^[^\.]\+\.[^\.]\+\.[^\.]\+\.//g;s/\.png$//g;s/_/-/g;s/\./_/g').xml"
             cp "$GEM_GIT_PACKAGE/openquake/moon/test/xunit_tmpl/${xml_out}" "xunit-moon-dev_${xml_out}"
             sed -i "s@#DD/MM/YYYY HH:MM:SS#@$beg_date@g;s@#FLOAT_SEC_TIME#@$float_sec_time@g" "xunit-moon-dev_${xml_out}"
