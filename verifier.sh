@@ -296,8 +296,9 @@ copy_dev () {
     echo "copy dev"
 #    scp "${lxc_ip}:/var/log/apache2/access.log" "out/dev_apache2_access.log" || true
 #    scp "${lxc_ip}:/var/log/apache2/error.log" "out/dev_apache2_error.log" || true
-#    scp "${lxc_ip}:dev_*.png" "out/" || true
-    scp "${lxc_ip}:xunit-moon-dev.xml" "out/" || true
+    scp "${lxc_ip}:dev_*.png" "out/" || true
+    scp "${lxc_ip}:dev-neg_*.png" "out/" || true
+    scp "${lxc_ip}:xunit-moon-dev*.xml" "out/" || true
 }
 
 

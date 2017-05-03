@@ -30,8 +30,27 @@ exec_test () {
     cp $GEM_GIT_PACKAGE/openquake/moon/test/config/moon_config.py.tmpl $GEM_GIT_PACKAGE/openquake/moon/test/config/moon_config.py
     export DISPLAY=:1
     export PYTHONPATH=$HOME/$GEM_GIT_PACKAGE:$HOME/$GEM_GIT_PACKAGE/openquake/moon/test/config
-    python -m openquake.moon.nose_runner --failurecatcher dev -s -v --with-xunit --xunit-file=xunit-moon-dev.xml $GEM_GIT_PACKAGE/openquake/moon/test || true
-    # sleep 40000 || true
+    err=0
+    python -m openquake.moon.nose_runner --failurecatcher dev -s -v -a '!negate' --with-xunit --xunit-file=xunit-moon-dev.xml $GEM_GIT_PACKAGE/openquake/moon/test || err=1
+    for negate_file in screenshot_test; do
+        beg_date="$(date "+%d/%b/%Y %H:%M:%S")"
+        time_begin="$(date +%s%N)"
+        python -m openquake.moon.nose_runner --failurecatcher dev-neg -s -v -a 'negate' --with-xunit --xunit-file=xunit-moon-dev-neg.xml "$GEM_GIT_PACKAGE/openquake/moon/test/${negate_file}.py" || true
+        time_end="$(date +%s%N)"
+        float_sec_time="$((time_end - time_begin))"
+        if [ ! -f  dev-neg_openquake.moon.test.*.${negate_file}.png ]; then
+            echo "Expected file [dev-neg_openquake.moon.test.*.${negate_file}.png] not found"
+            err=1
+            break
+        else
+            filename="$(ls "dev-neg_openquake.moon.test.*.${negate_file}.png")"
+            xml_out="$(echo "$filename" | sed 's/^[^\.]\+\.[^\.]\+\.[^\.]\+\.//g;s/\.png$//g;s/_/-/g;s/\./_/g').xml"
+            cp "$GEM_GIT_PACKAGE/openquake/moon/test/xunit_tmpl/${xml_out}" "xunit-moon-dev_${xml_out}"
+            sed -i "s@#DD/MM/YYYY HH:MM:SS#@$beg_date@g;s@#FLOAT_SEC_TIME#@$float_sec_time@g" "xunit-moon-dev_${xml_out}"
+        fi
+    done
+
+    return $err
 }
 
 exec_test
