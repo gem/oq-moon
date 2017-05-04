@@ -308,15 +308,16 @@ class Moon(object):
         self.windows_reset()
 
         if not self.is_logged:
-            print "WARNING: %s.fini without user (%s)" % (
-                self.__class__, self.user)
-            self.driver.quit()
+            # print "WARNING: %s.fini without user (%s)" % (
+            #     self.__class__, self.user)
+            if self.driver is not None:
+                self.driver.quit()
             return
 
         # try to find logout button (in the header)
         try:
             user_button = self.xpath_finduniq(
-                "//a[@href='#' and normalize-space(@class='dropdown-toggle')]", timeout=0.2)
+                "//a[@href='#' and normalize-space(@class)='dropdown-toggle avatar']", timeout=5.0)
         except (TimeoutError, ValueError, NotUniqError):
             #self.driver.get(self.basepath)
             user_button = self.xpath_finduniq(
@@ -348,7 +349,8 @@ class Moon(object):
             "text()) = 'Log out']")
         logout_button.click()
 
-        self.driver.quit()
+        if self.driver:
+            self.driver.quit()
 
     def cleanup(self):
         # removes secondary platforms
@@ -584,13 +586,18 @@ class Moon(object):
             self.switch_to_window(self.main_window)
 
     def windows_reset(self):
+        if self.driver is None:
+            return
+
         # print self.driver.window_handles
-        for handle in self.driver.window_handles:
-            if handle == self.main_window:
-                continue
-            self.switch_to_window(handle)
-            self.driver.close()
-        self.switch_to_window(self.main_window)
+        if self.driver.window_handles is not None:
+            for handle in self.driver.window_handles:
+                if handle == self.main_window:
+                    continue
+                self.switch_to_window(handle)
+                self.driver.close()
+        if self.main_window is not None:
+            self.switch_to_window(self.main_window)
 
     def window_close(self):
         self.driver.close()

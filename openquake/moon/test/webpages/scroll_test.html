@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>SCROLL TEST PAGE</title>
+  </head>
+  <body>
+    <div>The body of the page<br>
+      <div id="hyperlink-click" style="visibility: hidden;">HYPERLINK CLICKED</div>
+      <div id="internal-click" style="visibility: hidden;">INTERNAL CLICKED</div>
+      <div style="height: 2000px; background-color: pink;">Super long div</div>
+      <br>
+      <a href="#" onclick="document.getElementById('hyperlink-click').style.visibility = 'visible';">hyperlink</a>
+    </div>
+    <div id="footer" style="height: 100px; width: 100%; pointer-events:none; position: fixed; bottom: 2px; background-color: green;">FOOTER <a href="#" style="pointer-events: auto;" onclick="document.getElementById('internal-click').style.visibility = 'visible';">internal</a></div>
+  </body>
+</html>
