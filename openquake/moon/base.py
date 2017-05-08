@@ -572,14 +572,22 @@ class Moon(object):
                 option.click()  # select() in earlier versions of webdriver
                 break
 
-    def select_window_by_name(self, title):
-        win_cur = self.current_window_handle()
-        for handle in self.driver.window_handles:
-            self.switch_to_window(handle)
-            if self.driver.title == title:
-                return True
-        else:
-            self.switch_to_window(win_cur)
+    def select_window_by_name(self, title, timeout=3.0):
+        start = time.time()
+
+        while True:
+            win_cur = self.current_window_handle()
+            for handle in self.driver.window_handles:
+                self.switch_to_window(handle)
+                if self.driver.title == title:
+                    return True
+
+            if time.time() - start < timeout:
+                time.sleep(self.DT)
+            else:
+                break
+
+        self.switch_to_window(win_cur)
         raise ValueError
 
     def select_main_window(self):
