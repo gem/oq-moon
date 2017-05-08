@@ -301,6 +301,7 @@ class Moon(object):
         butt.click()
 
         self.users.remove(user)
+        self.get('')
 
     def fini(self):
         self.cleanup()
