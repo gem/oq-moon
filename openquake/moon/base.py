@@ -82,8 +82,9 @@ class Moon(object):
 
         # screencast: comment maximize_window() line
         # if you want to set a specific window size
-        time.sleep(2)
-        self.driver.maximize_window()
+        
+        # self.driver.maximize_window()
+        self.driver.manage().window().maximize();
         self.main_window = None
 
         self.homepage_login(landing=landing, autologin=autologin)
