@@ -86,7 +86,6 @@ class Moon(object):
         self.driver.maximize_window()
         self.main_window = None
 
-        time.sleep(5)
         self.homepage_login(landing=landing, autologin=autologin)
         time.sleep(1)
 
