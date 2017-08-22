@@ -84,7 +84,7 @@ class Moon(object):
         # if you want to set a specific window size
         
         # self.driver.maximize_window()
-        self.driver.window().maximize()
+        self.driver.maximize()
         self.main_window = None
 
         self.homepage_login(landing=landing, autologin=autologin)
