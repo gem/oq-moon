@@ -108,9 +108,9 @@ class Moon(object):
                 fp.set_preference("extensions.firebug.defaultPanelName",
                                   "console")
                 fp.set_preference("browser.helperApps.neverAsk.openFile",
-                                  "application/application/csv");
+                                  "application/csv");
                 fp.set_preference("browser.helperApps.neverAsk.saveToDisk",
-                                  "application/application/csv");
+                                  "application/csv");
             if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
