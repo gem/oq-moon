@@ -216,10 +216,13 @@ class Moon(object):
             return True
 
     def waituntil(self, delay, action):
-        WebDriverWait(self.driver, delay, action)
+        WebDriverWait(self.driver, delay).until(action)
 
     def waituntil_js(self, delay, action_js):
-        self.waituntil(delay, self.driver.execute_script(action_js))
+        def action(driver):
+            return driver.execute_script(action_js)
+
+        self.waituntil(delay, action)
 
     @property
     def url(self):
