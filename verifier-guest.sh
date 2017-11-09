@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sudo systemctl stop apt-daily.timer
 BRANCH_ID="$1"
 
 : ${GECKODRIVER_VER:=0.16.1}
