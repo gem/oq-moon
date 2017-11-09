@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __all__ = ['FailureCatcher', 'Moon', 'TimeoutError', 'NotUniqError']
 from base import Moon
 from utils import TimeoutError, NotUniqError
