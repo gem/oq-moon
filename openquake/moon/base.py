@@ -111,7 +111,7 @@ class Moon(object):
             fp.set_preference('browser.download.folderList', 1)
             fp.set_preference('browser.download.manager.showWhenStarting', False)
             fp.set_preference('browser.helperApps.neverAsk.saveToDisk',
-                              'text/csv,text/xml')
+                              'text/csv,text/xml,application/zip')
 
             if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
