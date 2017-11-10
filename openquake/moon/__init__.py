@@ -18,6 +18,6 @@
 
 __version__ = "0.3.0"
 __all__ = ['FailureCatcher', 'Moon', 'TimeoutError', 'NotUniqError']
-from base import Moon
-from utils import TimeoutError, NotUniqError
-from failurecatcher import FailureCatcher
+from openquake.moon.base import Moon
+from openquake.moon.utils import TimeoutError, NotUniqError
+from openquake.moon.failurecatcher import FailureCatcher
