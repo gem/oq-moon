@@ -10,7 +10,7 @@ PUBLIC_DIRECTORY = os.path.join(os.path.dirname(__file__), 'webpages')
 
 class MyRequestHandler(SimpleHTTPRequestHandler):
     def translate_path(self, path):
-        print "PATH: [%s]" % path
+        print("PATH: [%s]" % path)
         if path == '/':
             return PUBLIC_DIRECTORY + os.sep + 'index.html'
         else:
@@ -42,7 +42,7 @@ def setup_package():
 
 # turned off because nose run it at the wrong time
 #def teardown_package():
-#    print "teardown_package here"
+#    print("teardown_package here")
 #    pla.fini()
 
 def my_at_exit():
