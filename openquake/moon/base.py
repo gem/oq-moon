@@ -18,7 +18,7 @@
 
 import time
 import sys, os
-from utils import TimeoutError, NotUniqError, wait_for
+from .utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -316,8 +316,8 @@ class Moon(object):
         self.windows_reset()
 
         if not self.is_logged:
-            # print "WARNING: %s.fini without user (%s)" % (
-            #     self.__class__, self.user)
+            # print("WARNING: %s.fini without user (%s)" % (
+            #     self.__class__, self.user))
             if self.driver is not None:
                 self.driver.quit()
             return
@@ -469,7 +469,7 @@ class Moon(object):
                 element = self.xpath_finduniq(match)
                 break
             except Exception as e:
-                print "except %s" % e
+                print("except %s" % e)
                 if time.time() - start < timeout:
                     time.sleep(self.DT)
                 else:
@@ -493,7 +493,7 @@ class Moon(object):
             ret = self.wait_new_page_next(element, url, timeout=timeout)
 
         if self.stats_on:
-            print "STATS: waited %g secs for [%s] with strategy %s" % (time.time() - start, url, strategy)
+            print("STATS: waited %g secs for [%s] with strategy %s" % (time.time() - start, url, strategy))
 
         if ret is not True:
             return ret
@@ -616,7 +616,7 @@ class Moon(object):
         if self.driver is None:
             return
 
-        # print self.driver.window_handles
+        # print(self.driver.window_handles)
         if self.driver.window_handles is not None:
             for handle in self.driver.window_handles:
                 if handle == self.main_window:
@@ -637,4 +637,3 @@ class Moon(object):
 
     def switch_to_window(self, handle):
         return self.driver.switch_to_window(handle)
-
