@@ -107,6 +107,12 @@ class Moon(object):
                                   True)
                 fp.set_preference("extensions.firebug.defaultPanelName",
                                   "console")
+                
+            fp.set_preference('browser.download.folderList', 1)
+            fp.set_preference('browser.download.manager.showWhenStarting', False)
+            fp.set_preference('browser.helperApps.neverAsk.saveToDisk',
+                              'text/csv,text/xml')
+
             if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
@@ -381,7 +387,8 @@ class Moon(object):
     def get(self, url):
         self.driver.get(self.basepath + url)
 
-    def xpath_finduniq(self, xpath_str, times=None, postfind=0, timeout=None):
+    def xpath_find(self, xpath_str, times=None, postfind=0,
+                       use_first=False, timeout=None):
         if timeout is not None:
             times = int(timeout / self.DT)
         elif times is None:
@@ -404,7 +411,7 @@ class Moon(object):
                     "Search path '{}' not matches.".format(xpath_str)
                     )
 
-        if len(field) > 1:
+        if use_first is False and len(field) > 1:
             raise NotUniqError(
                 "Waiting for '{}' returned {} matches.".format(xpath_str,
                                                                len(field))
@@ -413,6 +420,16 @@ class Moon(object):
         if postfind > 0:
             time.sleep(postfind)
         return field[0]
+
+    def xpath_finduniq(self, xpath_str, times=None, postfind=0,
+                       timeout=None):
+        return self.xpath_find(xpath_str, times=times, postfind=postfind,
+                       timeout=timeout, use_first=False)
+
+    def xpath_findfirst(self, xpath_str, times=None, postfind=0,
+                       timeout=None):
+        return self.xpath_find(xpath_str, times=times, postfind=postfind,
+                       timeout=timeout, use_first=True)
 
     def xpath_finduniq_coords(self, xpath_str, times=None, postfind=0, timeout=None):
         for i in range(1,15):
