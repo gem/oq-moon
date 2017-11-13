@@ -18,7 +18,7 @@
 
 import time
 import sys, os
-from openquake.moon.utils import TimeoutError, NotUniqError, wait_for
+from .utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
