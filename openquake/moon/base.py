@@ -216,7 +216,7 @@ class Moon(object):
             return True
 
     def waituntil(self, delay, action):
-        WebDriverWait(self.driver, delay).until(action)
+        WebDriverWait(self.driver, delay, action)
 
     def waituntil_js(self, delay, action_js):
         def action(driver):
