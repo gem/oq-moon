@@ -18,7 +18,7 @@
 
 import time
 import sys, os
-from utils import TimeoutError, NotUniqError, wait_for
+from .utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -319,8 +319,8 @@ class Moon(object):
         self.windows_reset()
 
         if not self.is_logged:
-            # print "WARNING: %s.fini without user (%s)" % (
-            #     self.__class__, self.user)
+            # print("WARNING: %s.fini without user (%s)" % (
+            #     self.__class__, self.user))
             if self.driver is not None:
                 self.driver.quit()
             return
@@ -390,7 +390,8 @@ class Moon(object):
     def get(self, url):
         self.driver.get(self.basepath + url)
 
-    def xpath_finduniq(self, xpath_str, times=None, postfind=0, timeout=None):
+    def xpath_find(self, xpath_str, times=None, postfind=0,
+                       use_first=False, timeout=None):
         if timeout is not None:
             times = int(timeout / self.DT)
         elif times is None:
@@ -413,7 +414,7 @@ class Moon(object):
                     "Search path '{}' not matches.".format(xpath_str)
                     )
 
-        if len(field) > 1:
+        if use_first is False and len(field) > 1:
             raise NotUniqError(
                 "Waiting for '{}' returned {} matches.".format(xpath_str,
                                                                len(field))
@@ -422,6 +423,16 @@ class Moon(object):
         if postfind > 0:
             time.sleep(postfind)
         return field[0]
+
+    def xpath_finduniq(self, xpath_str, times=None, postfind=0,
+                       timeout=None):
+        return self.xpath_find(xpath_str, times=times, postfind=postfind,
+                       timeout=timeout, use_first=False)
+
+    def xpath_findfirst(self, xpath_str, times=None, postfind=0,
+                       timeout=None):
+        return self.xpath_find(xpath_str, times=times, postfind=postfind,
+                       timeout=timeout, use_first=True)
 
     def xpath_finduniq_coords(self, xpath_str, times=None, postfind=0, timeout=None):
         for i in range(1,15):
@@ -461,7 +472,7 @@ class Moon(object):
                 element = self.xpath_finduniq(match)
                 break
             except Exception as e:
-                print "except %s" % e
+                print("except %s" % e)
                 if time.time() - start < timeout:
                     time.sleep(self.DT)
                 else:
@@ -485,7 +496,7 @@ class Moon(object):
             ret = self.wait_new_page_next(element, url, timeout=timeout)
 
         if self.stats_on:
-            print "STATS: waited %g secs for [%s] with strategy %s" % (time.time() - start, url, strategy)
+            print("STATS: waited %g secs for [%s] with strategy %s" % (time.time() - start, url, strategy))
 
         if ret is not True:
             return ret
@@ -608,7 +619,7 @@ class Moon(object):
         if self.driver is None:
             return
 
-        # print self.driver.window_handles
+        # print(self.driver.window_handles)
         if self.driver.window_handles is not None:
             for handle in self.driver.window_handles:
                 if handle == self.main_window:
@@ -629,4 +640,3 @@ class Moon(object):
 
     def switch_to_window(self, handle):
         return self.driver.switch_to_window(handle)
-
