@@ -17,8 +17,22 @@
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
 import nose
+import sys
+import os
 
 from openquake.moon import FailureCatcher
 
 if __name__ == '__main__':
-    nose.main(addplugins=[FailureCatcher()])
+    paths = []
+    if 'GEM_OPT_PACKAGES' in os.environ:
+        pkgs = os.environ['GEM_OPT_PACKAGES'].split(',')
+        for pkg_name in pkgs:
+            try:
+                pkg = __import__(pkg_name)
+                paths.append(os.path.join(os.path.dirname(pkg.__file__),
+                             'test'))
+            except ImportError:
+                pass
+        print(paths)
+
+    nose.main(addplugins=[FailureCatcher()], argv=(sys.argv + paths))
