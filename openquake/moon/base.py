@@ -111,7 +111,7 @@ class Moon(object):
             fp.set_preference('browser.download.folderList', 1)
             fp.set_preference('browser.download.manager.showWhenStarting', False)
             fp.set_preference('browser.helperApps.neverAsk.saveToDisk',
-                              'text/csv,text/xml')
+                              'text/csv,text/xml,application/zip')
 
             if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
@@ -216,10 +216,13 @@ class Moon(object):
             return True
 
     def waituntil(self, delay, action):
-        WebDriverWait(self.driver, delay, action)
+        WebDriverWait(self.driver, delay).until(action)
 
     def waituntil_js(self, delay, action_js):
-        self.waituntil(delay, self.driver.execute_script(action_js))
+        def action(driver):
+            return driver.execute_script(action_js)
+
+        self.waituntil(delay, action)
 
     @property
     def url(self):

@@ -18,5 +18,5 @@
 from .base import Moon
 from .utils import TimeoutError, NotUniqError
 from .failurecatcher import FailureCatcher
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 __all__ = ['FailureCatcher', 'Moon', 'TimeoutError', 'NotUniqError']
