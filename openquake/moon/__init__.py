@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# Copyright (C) 2016 GEM Foundation
+# Copyright (C) 2016-2017 GEM Foundation
 #
 # OpenQuake Moon (oq-moon) is free software: you can redistribute it
 # and/or modify it under the terms of the GNU Affero General Public License
@@ -18,5 +18,8 @@
 from .base import Moon
 from .utils import TimeoutError, NotUniqError
 from .failurecatcher import FailureCatcher
+from .platform import platform_get
+
 __version__ = "0.4.2"
-__all__ = ['FailureCatcher', 'Moon', 'TimeoutError', 'NotUniqError']
+__all__ = ['FailureCatcher', 'Moon', 'TimeoutError', 'NotUniqError',
+           'platform_get']
