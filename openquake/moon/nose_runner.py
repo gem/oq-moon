@@ -29,10 +29,14 @@ if __name__ == '__main__':
         for pkg_name in pkgs:
             try:
                 pkg = __import__(pkg_name)
-                paths.append(os.path.join(os.path.dirname(pkg.__file__),
-                             'test'))
+                new_path = os.path.join(os.path.dirname(pkg.__file__),
+                                        'test')
+                if os.path.isdir(new_path) is False:
+                    continue
+                print("ADDING NEW TESTS PATH: [%s]" % new_path)
+                paths.append(new_path)
             except ImportError:
                 pass
-        print(paths)
+        print("TESTS PATHS: %s" % paths)
 
     nose.main(addplugins=[FailureCatcher()], argv=(sys.argv + paths))
