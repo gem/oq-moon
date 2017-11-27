@@ -31,7 +31,7 @@ if __name__ == '__main__':
                 pkg = __import__(pkg_name)
                 new_path = os.path.join(os.path.dirname(pkg.__file__),
                                         'test')
-                if os.path.isdir(new_path) is False:
+                if not os.path.isdir(new_path):
                     continue
                 print("ADDING NEW TESTS PATH: [%s]" % new_path)
                 paths.append(new_path)
