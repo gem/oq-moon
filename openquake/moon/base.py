@@ -17,7 +17,9 @@
 # along with OpenQuake. If not, see <http://www.gnu.org/licenses/>.
 
 import time
-import sys, os
+import sys
+import os
+import re
 from .utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
@@ -593,15 +595,19 @@ class Moon(object):
                 option.click()  # select() in earlier versions of webdriver
                 break
 
-    def select_window_by_name(self, title, timeout=3.0):
+    def select_window_by_name(self, title, timeout=3.0, is_regex=False):
         start = time.time()
 
         while True:
             win_cur = self.current_window_handle()
             for handle in self.driver.window_handles:
                 self.switch_to_window(handle)
-                if self.driver.title == title:
-                    return True
+                if is_regex is True:
+                    if re.search(title, self.driver.title):
+                        return True
+                else:
+                    if self.driver.title == title:
+                        return True
 
             if time.time() - start < timeout:
                 time.sleep(self.DT)
