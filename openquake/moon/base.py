@@ -119,6 +119,12 @@ class Moon(object):
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
 
+                firefox_capabilities = DesiredCapabilities.FIREFOX.copy()
+                firefox_capabilities["moz:firefoxOptions"] = {
+                    "log":{
+                        "level" : "trace"
+                    }
+                }
                 # screencast: the extension "Hide Tab Bar With One Tab" enable tab hiding if just one tab is opened
                 # fp.add_extension(extension="/home/nastasi/.mozilla/firefox/hd03qque.default/extensions/{e5bbc237-c99b-4ced-a061-0be27703295f}.xpi")
                 driver = webdriver.Firefox(firefox_profile=fp, capabilities=firefox_capabilities)
