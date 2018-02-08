@@ -449,6 +449,10 @@ class Moon(object):
 
         return (tail_ptr, x, y)
 
+    def scroll_into_view(self, element):
+        element.location_once_scrolled_into_view
+        self.driver.execute_script("window.scrollTo(0, 50);")
+
     def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
 
