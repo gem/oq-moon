@@ -465,11 +465,17 @@ class Moon(object):
 
         return (tail_ptr, x, y)
 
-    def scroll_into_view(self, match, element):
-        print(element)
-        self.xpath_finduniq(match)
-        element.location_once_scrolled_into_view
-        # self.driver.execute_script("window.scrollTo(0, 50);")
+    def scroll_into_view(self, match, found_element):
+        el = self.xpath_finduniq(match)
+        el_height = el.size['height']
+        scroll_el_height = el_height + el_height
+        if el_height > -1:
+            found_element.location_once_scrolled_into_view
+            loc = found_element.location
+            yloc = loc['y']
+            scr_loc = yloc - scroll_el_height
+            self.driver.execute_script(
+                "window.scrollTo(0, '%s');" % int(scr_loc))
 
     def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
