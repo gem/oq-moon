@@ -478,7 +478,7 @@ class Moon(object):
         scr_loc = loc['y'] - scroll_el_height
 
         self.driver.execute_script(
-            "window.scrollTo(0, '%d');" % int(scr_loc))
+            "window.scrollTo(0, %d);" % int(scr_loc))
 
     def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
@@ -490,7 +490,8 @@ class Moon(object):
                 return False
             except StaleElementReferenceException:
                 deslashed = self.driver.current_url.rstrip('/')
-                if (deslashed == url or deslashed == (self.basepath + url)):
+                if (deslashed == url
+                        or deslashed == (self.basepath + url)):
                     return True
                 else:
                     raise ValueError("expected %s or %s, received %s" % (
