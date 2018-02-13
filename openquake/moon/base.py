@@ -407,14 +407,15 @@ class Moon(object):
         self.driver.get(self.basepath + url)
 
     def xpath_find(self, xpath_str, times=None, postfind=0,
-                   use_first=False, timeout=None):
+                   use_first=False, timeout=None, el=None):
+        base = el if el else self.driver
         if timeout is not None:
             times = int(timeout / self.DT)
         elif times is None:
             times = int(self.TIMEOUT / self.DT)
 
         for t in range(0, times):
-            field = self.driver.find_elements(By.XPATH, xpath_str)
+            field = base.find_elements(By.XPATH, xpath_str)
             if len(field) > 0:
                 break
             if times > 1:
@@ -441,9 +442,9 @@ class Moon(object):
         return field[0]
 
     def xpath_finduniq(self, xpath_str, times=None, postfind=0,
-                       timeout=None):
+                       timeout=None, el=None):
         return self.xpath_find(xpath_str, times=times, postfind=postfind,
-                               timeout=timeout, use_first=False)
+                               timeout=timeout, use_first=False, el=el)
 
     def xpath_findfirst(self, xpath_str, times=None, postfind=0,
                         timeout=None):
@@ -468,14 +469,17 @@ class Moon(object):
     def scroll_into_view(self, match, found_element):
         el = self.xpath_finduniq(match)
         el_height = el.size['height']
-        scroll_el_height = el_height + el_height
-        if el_height > -1:
-            found_element.location_once_scrolled_into_view
-            loc = found_element.location
-            yloc = loc['y']
-            scr_loc = yloc - scroll_el_height
-            self.driver.execute_script(
-                "window.scrollTo(0, '%s');" % int(scr_loc))
+        scroll_el_height = el_height
+
+        found_element.location_once_scrolled_into_view
+        loc = found_element.location
+
+        yloc = loc['y']
+
+        scr_loc = yloc - scroll_el_height
+
+        self.driver.execute_script(
+            "window.scrollTo(0, '%d');" % int(scr_loc))
 
     def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
