@@ -45,6 +45,7 @@ class Moon(object):
         self.is_logged = False
         self.jqheavy = jqheavy
         self.stats_on = 'OQ_MOON_STATS' in os.environ
+        self.header_height = -1
 
     def primary_set(self):
         self.__class__.__primary = self
@@ -466,17 +467,23 @@ class Moon(object):
 
         return (tail_ptr, x, y)
 
-    def scroll_into_view(self, match, found_element):
+    def header_height_store(self, match):
         el = self.xpath_finduniq(match)
-        el_height = el.size['height']
-        scroll_el_height = el_height
+        self.header_height = el.size['height']
 
+    def scroll_into_view(self, found_element, match=None):
+        if match:
+            el = self.xpath_finduniq(match)
+            scroll_el_height = el.size['height']
+        elif self.header_height >= 0:
+            scroll_el_height = self.header_height
+        else:
+            raise ValueError(
+                "match not set nether default obscuring element height set")
         found_element.location_once_scrolled_into_view
         loc = found_element.location
 
-        yloc = loc['y']
-
-        scr_loc = yloc - scroll_el_height
+        scr_loc = loc['y'] - scroll_el_height
 
         self.driver.execute_script(
             "window.scrollTo(0, '%d');" % int(scr_loc))
