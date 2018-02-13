@@ -45,6 +45,7 @@ class Moon(object):
         self.is_logged = False
         self.jqheavy = jqheavy
         self.stats_on = 'OQ_MOON_STATS' in os.environ
+        self.header_height = -1
 
     def primary_set(self):
         self.__class__.__primary = self
@@ -62,7 +63,8 @@ class Moon(object):
             # level of isolation without creating unnecessary globals
             try:
                 from moon_config import (
-                    pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger)
+                    pla_basepath, pla_user, pla_passwd,
+                    pla_email, pla_debugger)
             except ImportError as exc:
                 sys.stderr.write(str(exc) + "\n")
                 sys.exit("ERROR: moon_config.py not found or incomplete. "
@@ -70,7 +72,8 @@ class Moon(object):
                          "it properly or check if config.py.tmpl has "
                          "any new fields.")
         else:
-            pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger = config
+            pla_basepath, pla_user,
+            pla_passwd, pla_email, pla_debugger = config
 
         self.debugger = pla_debugger
         self.driver = self.driver_create("firefox", self.debugger)
@@ -84,7 +87,7 @@ class Moon(object):
 
         # screencast: comment maximize_window() line
         # if you want to set a specific window size
-        
+
         # self.driver.maximize_window()
         self.driver.set_window_size("1024", "768")
         self.main_window = None
@@ -109,19 +112,22 @@ class Moon(object):
                                   True)
                 fp.set_preference("extensions.firebug.defaultPanelName",
                                   "console")
-                
+
             fp.set_preference('browser.download.folderList', 1)
-            fp.set_preference('browser.download.manager.showWhenStarting', False)
-            fp.set_preference('browser.helperApps.neverAsk.saveToDisk',
-                              'text/csv,text/xml,application/zip,image/png')
+            fp.set_preference(
+                'browser.download.manager.showWhenStarting', False)
+            fp.set_preference(
+                'browser.helperApps.neverAsk.saveToDisk',
+                'text/csv,text/xml,application/zip,image/png')
 
             if sel_vers_maj > 2:
                 firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
 
-                # screencast: the extension "Hide Tab Bar With One Tab" enable tab hiding if just one tab is opened
-                # fp.add_extension(extension="/home/nastasi/.mozilla/firefox/hd03qque.default/extensions/{e5bbc237-c99b-4ced-a061-0be27703295f}.xpi")
-                driver = webdriver.Firefox(firefox_profile=fp, capabilities=firefox_capabilities)
+                # screencast: the extension "Hide Tab Bar With One Tab"
+                # enable tab hiding if just one tab is opened
+                driver = webdriver.Firefox(firefox_profile=fp,
+                                           capabilities=firefox_capabilities)
 
                 # screencast: set window position and size when required
                 # driver.set_window_position(0, 0)
@@ -146,7 +152,7 @@ class Moon(object):
         return True
 
     def platform_create(self, user, passwd, jqheavy=None):
-        if jqheavy == None:
+        if jqheavy is None:
             jqheavy = self.jqheavy
 
         pl = self.__class__(user, passwd, jqheavy=jqheavy)
@@ -170,39 +176,39 @@ class Moon(object):
             return True
 
         # <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        #Sign in</a>
+        # Sign in</a>
         input = self.xpath_finduniq("//a[normalize-space(text()) = 'Sign in']")
         input.click()
 
-        #<input id="id_username" type="text" name="username">
-        #<label for="id_password">Password:</label>
-        #<input id="id_password" type="password" name="password">
-        #<label class="checkbox">
         try:
             user_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id='id_username' and @type='text' "
-                "and @name='username']" % ("sign-in" if landing == "" else "form-horizontal"))
+                "//form[@class='%s']//input[@id="
+                "'id_username' and @type='text' and @name='username']" % (
+                    "sign-in" if landing == "" else "form-horizontal"))
         except (TimeoutError, ValueError, NotUniqError):
             user_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id='id_username' and @type='text' "
-                "and @name='username']" % ("form-signin" if landing == "" else "form-horizontal"))
+                "//form[@class='%s']//input[@id="
+                "'id_username' and @type='text' and @name='username']" % (
+                    "form-signin" if landing == "" else "form-horizontal"))
 
         self.wait_visibility(user_field, 2)
         user_field.send_keys(self.user)
 
         try:
             passwd_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id='id_password' and @type='password' "
-                "and @name='password']" % ("sign-in" if landing == "" else "form-horizontal"))
+                "//form[@class='%s']//input[@id="
+                "'id_password' and @type='password' and @name='password']" % (
+                    "sign-in" if landing == "" else "form-horizontal"))
         except (TimeoutError, ValueError, NotUniqError):
             passwd_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id='id_password' and @type='password' "
-                "and @name='password']" % ("form-signin" if landing == "" else "form-horizontal"))
+                "//form[@class='%s']//input[@id='id_password'"
+                " and @type='password' and @name='password']" % (
+                    "form-signin" if landing == "" else "form-horizontal"))
 
         self.wait_visibility(passwd_field, 1)
         passwd_field.send_keys(self.passwd)
 
-        #<button class="btn pull-right" type="submit">Sign in</button>
+        # <button class="btn pull-right" type="submit">Sign in</button>
         submit_button = self.xpath_finduniq(
             "//button[@type='submit' and text()='%s']" %
             ("Sign in" if landing == "" else "Log in"))
@@ -330,33 +336,34 @@ class Moon(object):
         # try to find logout button (in the header)
         try:
             user_button = self.xpath_finduniq(
-                "//a[@href='#' and normalize-space(@class)='dropdown-toggle avatar']", timeout=5.0)
+                "//a[@href='#' and normalize-space(@class)="
+                "'dropdown-toggle avatar']", timeout=5.0)
         except (TimeoutError, ValueError, NotUniqError):
-            #self.driver.get(self.basepath)
+            # self.driver.get(self.basepath)
             user_button = self.xpath_finduniq(
                 "//a[@href='#' and b[@class='caret']]")
 
-        #<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        #nastasi
-        #<b class="caret"></b>
-        #</a>
+        # <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        # nastasi
+        # <b class="caret"></b>
+        # </a>
 
         user_button.click()
 
-        #<a href="/account/logout/">
-        #<i class="icon-off"></i>
-        #Log out
-        #</a>
+        # <a href="/account/logout/">
+        # <i class="icon-off"></i>
+        # Log out
+        # </a>
         logout_button = self.xpath_finduniq(
             "//a[@href='/account/logout/' and normalize-space(text())"
             " = 'Log out']")
 
         logout_button.click()
 
-        #check new url
+        # check new url
         self.wait_new_page(logout_button, '/account/logout')
 
-        #<button class="btn btn-primary" type="submit">Log out</button>
+        # <button class="btn btn-primary" type="submit">Log out</button>
         logout_button = self.xpath_finduniq(
             "//button[@type='submit' and normalize-space("
             "text()) = 'Log out']")
@@ -393,14 +400,15 @@ class Moon(object):
         self.driver.get(self.basepath + url)
 
     def xpath_find(self, xpath_str, times=None, postfind=0,
-                       use_first=False, timeout=None):
+                   use_first=False, timeout=None, el=None):
+        base = el if el else self.driver
         if timeout is not None:
             times = int(timeout / self.DT)
         elif times is None:
             times = int(self.TIMEOUT / self.DT)
 
         for t in range(0, times):
-            field = self.driver.find_elements(By.XPATH, xpath_str)
+            field = base.find_elements(By.XPATH, xpath_str)
             if len(field) > 0:
                 break
             if times > 1:
@@ -427,19 +435,21 @@ class Moon(object):
         return field[0]
 
     def xpath_finduniq(self, xpath_str, times=None, postfind=0,
-                       timeout=None):
+                       timeout=None, el=None):
         return self.xpath_find(xpath_str, times=times, postfind=postfind,
-                       timeout=timeout, use_first=False)
+                               timeout=timeout, use_first=False, el=el)
 
     def xpath_findfirst(self, xpath_str, times=None, postfind=0,
-                       timeout=None):
+                        timeout=None):
         return self.xpath_find(xpath_str, times=times, postfind=postfind,
-                       timeout=timeout, use_first=True)
+                               timeout=timeout, use_first=True)
 
-    def xpath_finduniq_coords(self, xpath_str, times=None, postfind=0, timeout=None):
-        for i in range(1,15):
+    def xpath_finduniq_coords(self, xpath_str, times=None, postfind=0,
+                              timeout=None):
+        for i in range(1, 15):
             try:
-                tail_ptr = self.xpath_finduniq(xpath_str, times, postfind, timeout)
+                tail_ptr = self.xpath_finduniq(xpath_str, times, postfind,
+                                               timeout)
 
                 x = tail_ptr.location['x']
                 y = tail_ptr.location['y']
@@ -448,6 +458,27 @@ class Moon(object):
                 time.sleep(0.2)
 
         return (tail_ptr, x, y)
+
+    def header_height_store(self, match):
+        el = self.xpath_finduniq(match)
+        self.header_height = el.size['height']
+
+    def scroll_into_view(self, found_element, match=None):
+        if match:
+            el = self.xpath_finduniq(match)
+            scroll_el_height = el.size['height']
+        elif self.header_height >= 0:
+            scroll_el_height = self.header_height
+        else:
+            raise ValueError(
+                "match not set nether default obscuring element height set")
+        found_element.location_once_scrolled_into_view
+        loc = found_element.location
+
+        scr_loc = loc['y'] - scroll_el_height
+
+        self.driver.execute_script(
+            "window.scrollTo(0, %d);" % int(scr_loc))
 
     def wait_new_page_previous(self, element, url, timeout=3.0):
         from selenium.common.exceptions import StaleElementReferenceException
@@ -460,7 +491,7 @@ class Moon(object):
             except StaleElementReferenceException:
                 deslashed = self.driver.current_url.rstrip('/')
                 if (deslashed == url
-                    or deslashed == (self.basepath + url)):
+                        or deslashed == (self.basepath + url)):
                     return True
                 else:
                     raise ValueError("expected %s or %s, received %s" % (
@@ -471,7 +502,7 @@ class Moon(object):
         start = time.time()
         while True:
             try:
-                element = self.xpath_finduniq(match)
+                self.xpath_finduniq(match)
                 break
             except Exception as e:
                 print("except %s" % e)
@@ -481,7 +512,8 @@ class Moon(object):
                     raise TimeoutError
         return True
 
-    def wait_new_page(self, element, url, strategy="previous", jqheavy=None, timeout=3.0):
+    def wait_new_page(self, element, url, strategy="previous", jqheavy=None,
+                      timeout=3.0):
         '''
             'strategy' could be 'previous' or 'next'
             if 'strategy' is 'previous' wait until the 'element' became invalid
@@ -498,7 +530,8 @@ class Moon(object):
             ret = self.wait_new_page_next(element, url, timeout=timeout)
 
         if self.stats_on:
-            print("STATS: waited %g secs for [%s] with strategy %s" % (time.time() - start, url, strategy))
+            print("STATS: waited %g secs for [%s]"
+                  " with strategy %s" % (time.time() - start, url, strategy))
 
         if ret is not True:
             return ret
@@ -510,18 +543,20 @@ class Moon(object):
             iters = int(timeout * 10.0) + 1
 
             for i in range(1, iters):
-                value = self.driver.execute_script("return(typeof(window.jQuery) == 'function');")
+                value = self.driver.execute_script(
+                    "return(typeof(window.jQuery) == 'function');")
                 if value is True:
                     break
                 time.sleep(self.DT)
             else:
                 raise TimeoutError
 
-            self.driver.execute_script("window.jQuery().ready(function() { window.gem_moon_is_finished = true });")
-            #  pla.driver.execute_script("window.jQuery().ready(function () { console.log('we are here'); });")
-            # time.sleep(10)
+            self.driver.execute_script(
+                "window.jQuery().ready(function()"
+                " { window.gem_moon_is_finished = true });")
             for i in range(1, iters):
-                value = self.driver.execute_script("return window.gem_moon_is_finished")
+                value = self.driver.execute_script(
+                    "return window.gem_moon_is_finished")
                 if value is True:
                     break
                 time.sleep(self.DT)
@@ -531,7 +566,8 @@ class Moon(object):
     def screenshot(self, filename):
         if not self.driver:
             sys.stderr.write(
-                "%s not initialized, screenshot impossible.\n" % self.__class__)
+                "%s not initialized,"
+                " screenshot impossible.\n" % self.__class__)
             return
         self.driver.get_screenshot_as_file(filename)
 
