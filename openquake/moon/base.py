@@ -145,6 +145,7 @@ class Moon(object):
         start = time.time()
 
         while item.is_displayed() is False:
+            print('wait_vis: in while')
             if time.time() - start < timeout:
                 time.sleep(self.DT)
             else:
