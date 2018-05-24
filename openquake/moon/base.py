@@ -180,31 +180,19 @@ class Moon(object):
         input = self.xpath_finduniq("//a[normalize-space(text()) = 'Sign in']")
         input.click()
 
-        try:
-            user_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id="
-                "'id_username' and @type='text' and @name='username']" % (
-                    "sign-in" if landing == "" else "form-horizontal"))
-        except (TimeoutError, ValueError, NotUniqError):
-            user_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id="
-                "'id_username' and @type='text' and @name='username']" % (
-                    "form-signin" if landing == "" else "form-horizontal"))
-
+        user_field = self.xpath_find(
+            "//form[@class='%s' or @class='%s']//input[@id="
+            "'id_username' and @type='text' and @name='username']" % (
+                ('sign-in', 'form-signin') if landing == "" else (
+                    ('form-horizontal', 'form-horizontal'))))
         self.wait_visibility(user_field, 2)
         user_field.send_keys(self.user)
 
-        try:
-            passwd_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id="
-                "'id_password' and @type='password' and @name='password']" % (
-                    "sign-in" if landing == "" else "form-horizontal"))
-        except (TimeoutError, ValueError, NotUniqError):
-            passwd_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id='id_password'"
-                " and @type='password' and @name='password']" % (
-                    "form-signin" if landing == "" else "form-horizontal"))
-
+        passwd_field = self.xpath_find(
+            "//form[@class='%s' or @class='%s']//input[@id="
+            "'id_password' and @type='password' and @name='password']" % (
+                ('sign-in', 'form-signin') if landing == "" else (
+                    ('form-horizontal', 'form-horizontal'))))
         self.wait_visibility(passwd_field, 1)
         passwd_field.send_keys(self.passwd)
 
