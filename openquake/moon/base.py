@@ -180,31 +180,19 @@ class Moon(object):
         input = self.xpath_finduniq("//a[normalize-space(text()) = 'Sign in']")
         input.click()
 
-        try:
-            user_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id="
-                "'id_username' and @type='text' and @name='username']" % (
-                    "sign-in" if landing == "" else "form-horizontal"))
-        except (TimeoutError, ValueError, NotUniqError):
-            user_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id="
-                "'id_username' and @type='text' and @name='username']" % (
-                    "form-signin" if landing == "" else "form-horizontal"))
-
+        user_field = self.xpath_find(
+            "//form[@class='%s' or @class='%s']//input[@id="
+            "'id_username' and @type='text' and @name='username']" % (
+                ('sign-in', 'form-signin') if landing == "" else (
+                    ('form-horizontal', 'form-horizontal'))))
         self.wait_visibility(user_field, 2)
         user_field.send_keys(self.user)
 
-        try:
-            passwd_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id="
-                "'id_password' and @type='password' and @name='password']" % (
-                    "sign-in" if landing == "" else "form-horizontal"))
-        except (TimeoutError, ValueError, NotUniqError):
-            passwd_field = self.xpath_finduniq(
-                "//form[@class='%s']//input[@id='id_password'"
-                " and @type='password' and @name='password']" % (
-                    "form-signin" if landing == "" else "form-horizontal"))
-
+        passwd_field = self.xpath_find(
+            "//form[@class='%s' or @class='%s']//input[@id="
+            "'id_password' and @type='password' and @name='password']" % (
+                ('sign-in', 'form-signin') if landing == "" else (
+                    ('form-horizontal', 'form-horizontal'))))
         self.wait_visibility(passwd_field, 1)
         passwd_field.send_keys(self.passwd)
 
@@ -399,8 +387,8 @@ class Moon(object):
     def get(self, url):
         self.driver.get(self.basepath + url)
 
-    def xpath_find(self, xpath_str, times=None, postfind=0,
-                   use_first=False, timeout=None, el=None):
+    def xpath_find_any(self, xpath_str, times=None, postfind=0,
+                       timeout=None, el=None):
         base = el if el else self.driver
         if timeout is not None:
             times = int(timeout / self.DT)
@@ -424,14 +412,22 @@ class Moon(object):
                     "Search path '{}' not matches.".format(xpath_str)
                     )
 
-        if use_first is False and len(field) > 1:
-            raise NotUniqError(
-                "Waiting for '{}' returned {} matches.".format(xpath_str,
-                                                               len(field))
-                )
-
         if postfind > 0:
             time.sleep(postfind)
+
+        return field
+
+    def xpath_find(self, xpath_str, times=None, postfind=0,
+                   use_first=False, timeout=None, el=None):
+        field = self.xpath_find_any(
+            xpath_str, times=times, postfind=postfind,
+            timeout=timeout, el=el)
+
+        if use_first is False and len(field) > 1:
+            raise NotUniqError(
+                "Waiting for '{}' returned {} matches.".format(
+                    xpath_str, len(field)))
+
         return field[0]
 
     def xpath_finduniq(self, xpath_str, times=None, postfind=0,
@@ -446,18 +442,22 @@ class Moon(object):
 
     def xpath_finduniq_coords(self, xpath_str, times=None, postfind=0,
                               timeout=None):
+
+        # wait until the dom item appears, than loop for a while to
+        # get its coors
+        tail_ptr = self.xpath_finduniq(xpath_str, times, postfind,
+                                       timeout)
         for i in range(1, 15):
             try:
-                tail_ptr = self.xpath_finduniq(xpath_str, times, postfind,
-                                               timeout)
-
                 x = tail_ptr.location['x']
                 y = tail_ptr.location['y']
-                break
+                return (tail_ptr, x, y)
             except:
                 time.sleep(0.2)
+                tail_ptr = self.xpath_finduniq(xpath_str, times, postfind,
+                                               timeout)
+        raise TimeoutError('coords not found')
 
-        return (tail_ptr, x, y)
 
     def header_height_store(self, match):
         el = self.xpath_finduniq(match)
