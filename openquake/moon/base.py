@@ -184,7 +184,7 @@ class Moon(object):
             "//form[@class='%s' or @class='%s']//input[@id="
             "'id_username' and @type='text' and @name='username']" % (
                 ('sign-in', 'form-signin') if landing == "" else (
-                    ('form-horizontal', 'form-horizontal'))))
+                    ('sign-in', 'form-signin'))))
         self.wait_visibility(user_field, 2)
         user_field.send_keys(self.user)
 
@@ -192,14 +192,14 @@ class Moon(object):
             "//form[@class='%s' or @class='%s']//input[@id="
             "'id_password' and @type='password' and @name='password']" % (
                 ('sign-in', 'form-signin') if landing == "" else (
-                    ('form-horizontal', 'form-horizontal'))))
+                    ('sign-in', 'form-signin'))))
         self.wait_visibility(passwd_field, 1)
         passwd_field.send_keys(self.passwd)
 
         # <button class="btn pull-right" type="submit">Sign in</button>
         submit_button = self.xpath_finduniq(
             "//button[@type='submit' and text()='%s']" %
-            ("Sign in" if landing == "" else "Log in"))
+            ("Sign in" if landing == "" else "Sign in"))
         submit_button.click()
 
         self.wait_new_page(submit_button, self.basepath + landing)
