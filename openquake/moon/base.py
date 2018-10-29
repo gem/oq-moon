@@ -180,20 +180,34 @@ class Moon(object):
         input = self.xpath_finduniq("//a[normalize-space(text()) = 'Sign in']")
         input.click()
 
-        user_field = self.xpath_find(
-            "//form[@class='%s' or @class='%s']//input[@id="
-            "'id_username' and @type='text' and @name='username']" % (
-                ('sign-in', 'form-signin') if landing == "" else (
-                    ('sign-in', 'form-signin'))))
-        self.wait_visibility(user_field, 2)
+        if landing == "":
+            user_field = self.xpath_find(
+                "//form[@class='%s' or @class='%s']//input[@id="
+                "'id_username' and @type='text' and @name='username']" % (
+                    ('sign-in', 'form-signin')))
+            self.wait_visibility(user_field, 2)
+        else:
+            user_field = self.xpath_find(
+                "//div[@id='%s']//form//input[@id="
+                "'id_username' and @type='text' and @name='username']" % (
+                        ('SigninModal')))
+            self.wait_visibility(user_field, 2)
+
         user_field.send_keys(self.user)
 
-        passwd_field = self.xpath_find(
-            "//form[@class='%s' or @class='%s']//input[@id="
-            "'id_password' and @type='password' and @name='password']" % (
-                ('sign-in', 'form-signin') if landing == "" else (
-                    ('sign-in', 'form-signin'))))
-        self.wait_visibility(passwd_field, 1)
+        if landing == "":
+            passwd_field = self.xpath_find(
+                "//form[@class='%s' or @class='%s']//input[@id="
+                "'id_password' and @type='password' and @name='password']" % (
+                    ('sign-in', 'form-signin')))
+            self.wait_visibility(passwd_field, 1)
+        else:
+            passwd_field = self.xpath_find(
+                "//div[@id='%s']//form//input[@id="
+                "'id_password' and @type='password' and @name='password']" % (
+                    ('SigninModal')))
+            self.wait_visibility(passwd_field, 1)
+
         passwd_field.send_keys(self.passwd)
 
         # <button class="btn pull-right" type="submit">Sign in</button>
@@ -457,7 +471,6 @@ class Moon(object):
                 tail_ptr = self.xpath_finduniq(xpath_str, times, postfind,
                                                timeout)
         raise TimeoutError('coords not found')
-
 
     def header_height_store(self, match):
         el = self.xpath_finduniq(match)
