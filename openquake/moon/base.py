@@ -180,29 +180,23 @@ class Moon(object):
         input = self.xpath_finduniq("//a[normalize-space(text()) = 'Sign in']")
         input.click()
 
-        if landing == "":
-            user_field = self.xpath_find(
-                "//form[@class='sign-in' or @class='form-signin']//input[@id="
-                "'id_username' and @type='text' and @name='username']")
-            self.wait_visibility(user_field, 2)
-        else:
-            user_field = self.xpath_find(
-                "//div[@id='SigninModal']//form//input[@id="
-                "'id_username' and @type='text' and @name='username']")
-            self.wait_visibility(user_field, 2)
+        user_field = self.xpath_find(
+            "//form[@class='sign-in' or @class='form-signin']//input[@id="
+            "'id_username' and @type='text' and @name='username'] | "
+            "//div[@id='SigninModal']//form//input[@id="
+            "'id_username' and @type='text' and @name='username']"
+            )
+        self.wait_visibility(user_field, 2)
 
         user_field.send_keys(self.user)
 
-        if landing == "":
-            passwd_field = self.xpath_find(
-                "//form[@class='sign-in' or @class='form-signin']//input[@id="
-                "'id_password' and @type='password' and @name='password']")
-            self.wait_visibility(passwd_field, 1)
-        else:
-            passwd_field = self.xpath_find(
-                "//div[@id='SigninModal']//form//input[@id="
-                "'id_password' and @type='password' and @name='password']")
-            self.wait_visibility(passwd_field, 1)
+        passwd_field = self.xpath_find(
+            "//form[@class='sign-in' or @class='form-signin']//input[@id="
+            "'id_password' and @type='password' and @name='password'] | "
+            "//div[@id='SigninModal']//form//input[@id="
+            "'id_password' and @type='password' and @name='password']"
+            )
+        self.wait_visibility(passwd_field, 1)
 
         passwd_field.send_keys(self.passwd)
 
