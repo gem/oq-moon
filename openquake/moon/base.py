@@ -202,7 +202,7 @@ class Moon(object):
 
         # <button class="btn pull-right" type="submit">Sign in</button>
         submit_button = self.xpath_finduniq(
-            "//button[@type='submit' and text()='Sign in']")
+            "//button[@type='submit' and text()='Sign in' or text()='Log in']")
         submit_button.click()
 
         self.wait_new_page(submit_button, self.basepath + landing)
