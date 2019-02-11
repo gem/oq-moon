@@ -57,7 +57,7 @@ class Moon(object):
     def primary_get(cls):
         return(cls.__primary)
 
-    def init(self, landing="", config=None, autologin=True):
+    def init(self, landing="", config=None, autologin=True, timeout=3.0):
         if not config:
             # we import configuration variables here to keep highest
             # level of isolation without creating unnecessary globals
@@ -92,7 +92,8 @@ class Moon(object):
         self.driver.set_window_size("1024", "768")
         self.main_window = None
 
-        self.homepage_login(landing=landing, autologin=autologin)
+        self.homepage_login(landing=landing, autologin=autologin,
+                            timeout=timeout)
         time.sleep(1)
 
     @staticmethod
@@ -163,7 +164,7 @@ class Moon(object):
         self.platforms.remove(pl)
         pl.fini()
 
-    def homepage_login(self, landing="", autologin=True):
+    def homepage_login(self, landing="", autologin=True, timeout=3.0):
         self.driver.get(self.basepath + landing)
         if not self.main_window:
             self.main_window = self.current_window_handle()
@@ -225,7 +226,8 @@ class Moon(object):
                 " or text()='Log in']")
         submit_button.click()
 
-        self.wait_new_page(submit_button, self.basepath + landing)
+        self.wait_new_page(submit_button, self.basepath + landing,
+                           timeout=timeout)
 
         inputs = self.driver.find_elements(By.XPATH, "//a[text()='Sign in']")
         if len(inputs) == 1:
@@ -372,7 +374,7 @@ class Moon(object):
         logout_button.click()
 
         # check new url
-        self.wait_new_page(logout_button, '/account/logout')
+        self.wait_new_page(logout_button, '/account/logout', timeout=timeout)
 
         # <button class="btn btn-primary" type="submit">Log out</button>
         logout_button = self.xpath_finduniq(
