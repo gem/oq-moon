@@ -374,7 +374,7 @@ class Moon(object):
         logout_button.click()
 
         # check new url
-        self.wait_new_page(logout_button, '/account/logout', timeout=timeout)
+        self.wait_new_page(logout_button, '/account/logout')
 
         # <button class="btn btn-primary" type="submit">Log out</button>
         logout_button = self.xpath_finduniq(
