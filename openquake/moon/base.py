@@ -412,16 +412,19 @@ class Moon(object):
     def get(self, url):
         self.driver.get(self.basepath + url)
 
+    def xpath_find_base(self, xpath_str, el=None):
+        base = el if el else self.driver
+        return base.find_elements(By.XPATH, xpath_str)
+
     def xpath_find_any(self, xpath_str, times=None, postfind=0,
                        timeout=None, el=None):
-        base = el if el else self.driver
         if timeout is not None:
             times = int(timeout / self.DT)
         elif times is None:
             times = int(self.TIMEOUT / self.DT)
 
         for t in range(0, times):
-            field = base.find_elements(By.XPATH, xpath_str)
+            field = self.xpath_find_base(xpath_str, el=el)
             if len(field) > 0:
                 break
             if times > 1:
