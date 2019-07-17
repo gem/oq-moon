@@ -250,7 +250,7 @@ class Moon(object):
         return self.driver.current_url
 
     def user_add(self, user, passwd, email):
-        self.driver.get(self.basepath + "/admin/auth/user/add/")
+        self.driver.get(self.basepath + "/admin/people/profile/add/")
         user_field = self.xpath_finduniq(
             "//input[@id='id_username' and @type='text' "
             "and @name='username']")
@@ -279,7 +279,7 @@ class Moon(object):
         # <input id="id_email" class="vTextField" type="text" name="email"
         #     maxlength="75">
         email_field = self.xpath_finduniq(
-            "//input[@id='id_email' and @type='text' and @name='email']")
+            "//input[@id='id_email' and @type='email' and @name='email']")
         email_field.send_keys(email)
 
         # <div class="submit-row">
@@ -292,7 +292,7 @@ class Moon(object):
         self.users.append(user)
 
     def user_del(self, user):
-        self.driver.get(self.basepath + "/admin/auth/user/")
+        self.driver.get(self.basepath + "/admin/people/profile/")
 
         # <tr>
         #   <td class="action-checkbox">
