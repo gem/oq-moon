@@ -20,6 +20,6 @@ from .utils import TimeoutError, NotUniqError
 from .failurecatcher import FailureCatcher
 from .platform import platform_get, platform_del
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 __all__ = ['FailureCatcher', 'Moon', 'TimeoutError', 'NotUniqError',
            'platform_get', 'platform_del']
