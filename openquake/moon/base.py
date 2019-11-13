@@ -48,7 +48,8 @@ class Moon(object):
         self.jqheavy = jqheavy
         self.stats_on = 'OQ_MOON_STATS' in os.environ
         self.header_height = -1
-        # not factorized in 'driver_create' if change change it too
+        # not factorized in 'driver_create'
+        # if here changes it must be changes accordingly
         self._download_dir = os.path.join(
             os.path.expanduser("~"), Moon.DOWNLOAD_DIRNAME)
         if os.path.isdir(self._download_dir):
