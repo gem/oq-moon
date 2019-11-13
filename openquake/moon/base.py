@@ -20,6 +20,7 @@ import time
 import sys
 import os
 import re
+import shutil
 from .utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
@@ -30,6 +31,7 @@ class Moon(object):
     DT = 0.1
     # standard waiting time before rise exception (in sec)
     TIMEOUT = 5
+    DOWNLOAD_DIRNAME = 'gem-oq-moon-download'
     __primary = None
 
     def __init__(self, user=None, passwd=None, email=None, jqheavy=False):
@@ -46,6 +48,16 @@ class Moon(object):
         self.jqheavy = jqheavy
         self.stats_on = 'OQ_MOON_STATS' in os.environ
         self.header_height = -1
+        # not factorized in 'driver_create' if change change it too
+        self._download_dir = os.path.join(
+            os.path.expanduser("~"), Moon.DOWNLOAD_DIRNAME)
+        if os.path.isdir(self._download_dir):
+            shutil.rmtree(self._download_dir)
+        os.mkdir(self._download_dir)
+
+    @property
+    def download_dir(self):
+        return self._download_dir
 
     def primary_set(self):
         self.__class__.__primary = self
@@ -107,22 +119,25 @@ class Moon(object):
                 fp.add_extension(extension=debugger)
                 fp.native_events_enabled = False
                 fp.set_preference("browser.tabs.warnOnClose", False)
-                fp.set_preference("extensions.firebug.allPagesActivation",
-                                  "on")
-                fp.set_preference("extensions.firebug.console.enableSites",
-                                  True)
-                fp.set_preference("extensions.firebug.defaultPanelName",
-                                  "console")
+                fp.set_preference(
+                    "extensions.firebug.allPagesActivation", "on")
+                fp.set_preference(
+                    "extensions.firebug.console.enableSites", True)
+                fp.set_preference(
+                    "extensions.firebug.defaultPanelName", "console")
 
-            fp.set_preference('browser.download.folderList', 1)
+            fp.set_preference('browser.download.folderList', 2)
             fp.set_preference(
                 'browser.download.manager.showWhenStarting', False)
+            fp.set_preference("browser.download.dir", os.path.join(
+                os.path.expanduser("~"), Moon.DOWNLOAD_DIRNAME))
             fp.set_preference(
                 'browser.helperApps.neverAsk.saveToDisk',
                 'text/csv,text/xml,application/zip,image/png')
 
             if sel_vers_maj > 2:
-                firefox_capabilities = webdriver.common.desired_capabilities.DesiredCapabilities.FIREFOX
+                caps = webdriver.common.desired_capabilities
+                firefox_capabilities = caps.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
 
                 # screencast: the extension "Hide Tab Bar With One Tab"
