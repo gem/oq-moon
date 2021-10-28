@@ -182,15 +182,15 @@ class Moon(object):
 
     def homepage_login(self, landing="", autologin=True, timeout=3.0):
         self.driver.get(self.basepath + landing)
-        if not self.main_window:
-            self.main_window = self.current_window_handle()
-            try:
-                self.driver.switch_to_window(self.main_window)
-            except WebDriverException:
-                self.main_window = None
+        # if not self.main_window:
+        #     self.main_window = self.current_window_handle()
+        #     try:
+        #         self.driver.switch_to_window(self.main_window)
+        #     except WebDriverException:
+        #         self.main_window = None
 
-        if not autologin:
-            return True
+        # if not autologin:
+        #     return True
 
         # <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         # Sign in</a>
