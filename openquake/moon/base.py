@@ -200,7 +200,7 @@ class Moon(object):
         try:
             user_field = self.xpath_find(
                 "//form[@class='%s' or @class='%s']//input[@id="
-                "'id_username' and @type='text' and @name='username']" % (
+                "'id_username' and @type='text' and @name='login']" % (
                     ('sign-in', 'form-signin') if landing == "" else (
                         ('form-horizontal', 'form-horizontal'))))
             passwd_field = self.xpath_find(
@@ -212,7 +212,7 @@ class Moon(object):
         except:
             user_field = self.xpath_find(
                 "//form[@class='sign-in' or @class='form-signin']//input[@id="
-                "'id_username' and @type='text' and @name='username'] | "
+                "'id_username' and @type='text' and @name='login'] | "
                 "//div[@id='SigninModal']//form//input[@id="
                 "'id_username' and @type='text' and @name='username']"
             )
