@@ -395,7 +395,7 @@ class Moon(object):
         # <button class="btn btn-primary" type="submit">Log out</button>
         logout_button = self.xpath_finduniq(
             "//button[@type='submit' and normalize-space("
-            "text()) = 'Sign Out']")
+            "text()) = 'Log out']")
         logout_button.click()
 
         if self.driver:
