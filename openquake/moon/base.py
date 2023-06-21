@@ -85,8 +85,7 @@ class Moon(object):
                          "it properly or check if config.py.tmpl has "
                          "any new fields.")
         else:
-            pla_basepath, pla_user,
-            pla_passwd, pla_email, pla_debugger = config
+            (pla_basepath, pla_user, pla_passwd, pla_email, pla_debugger) = config
 
         self.debugger = pla_debugger
         self.driver = self.driver_create("firefox", self.debugger)
