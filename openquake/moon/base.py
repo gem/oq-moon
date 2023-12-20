@@ -714,7 +714,7 @@ class Moon(object):
                 self.switch_to.window(handle)
                 self.driver.close()
         if self.main_window is not None:
-            self.switch_to.window(self.main_window)
+            self.switch_to_window(self.main_window)
 
     def window_close(self):
         self.driver.close()
