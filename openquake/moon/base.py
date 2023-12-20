@@ -726,4 +726,4 @@ class Moon(object):
         return self.driver.switch_to_alert()
 
     def switch_to_window(self, handle):
-        return self.driver.switch_to_window(handle)
+        return self.driver.switch_to.window(handle)
