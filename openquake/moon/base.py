@@ -187,7 +187,7 @@ class Moon(object):
         if not self.main_window:
             self.main_window = self.current_window_handle()
             try:
-                self.driver.switch_to_window(self.main_window)
+                self.driver.switch_to.window(self.main_window)
             except WebDriverException:
                 self.main_window = None
 
@@ -682,7 +682,7 @@ class Moon(object):
         while True:
             win_cur = self.current_window_handle()
             for handle in self.driver.window_handles:
-                self.switch_to_window(handle)
+                self.switch_to.window(handle)
                 if is_regex is True:
                     if re.search(title, self.driver.title):
                         return True
@@ -695,12 +695,12 @@ class Moon(object):
             else:
                 break
 
-        self.switch_to_window(win_cur)
+        self.switch_to.window(win_cur)
         raise ValueError
 
     def select_main_window(self):
         if self.main_window:
-            self.switch_to_window(self.main_window)
+            self.switch_to.window(self.main_window)
 
     def windows_reset(self):
         if self.driver is None:
@@ -711,10 +711,10 @@ class Moon(object):
             for handle in self.driver.window_handles:
                 if handle == self.main_window:
                     continue
-                self.switch_to_window(handle)
+                self.switch_to.window(handle)
                 self.driver.close()
         if self.main_window is not None:
-            self.switch_to_window(self.main_window)
+            self.switch_to.window(self.main_window)
 
     def window_close(self):
         self.driver.close()
