@@ -711,7 +711,7 @@ class Moon(object):
             for handle in self.driver.window_handles:
                 if handle == self.main_window:
                     continue
-                self.switch_to.window(handle)
+                self.switch_to_window(handle)
                 self.driver.close()
         if self.main_window is not None:
             self.switch_to_window(self.main_window)
