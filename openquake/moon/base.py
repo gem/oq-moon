@@ -25,6 +25,7 @@ from .utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.firefox.options import Options
 
 
 class Moon(object):
@@ -142,14 +143,14 @@ class Moon(object):
 
                 # screencast: the extension "Hide Tab Bar With One Tab"
                 # enable tab hiding if just one tab is opened
-                driver = webdriver.Firefox(firefox_profile=fp,
+                driver = webdriver.Firefox(options=fp,
                                            capabilities=firefox_capabilities)
 
                 # screencast: set window position and size when required
                 # driver.set_window_position(0, 0)
                 # driver.set_window_size(1024, 742)
             else:
-                driver = webdriver.Firefox(firefox_profile=fp)
+                driver = webdriver.Firefox(options=fp)
         else:
             driver = None
 
