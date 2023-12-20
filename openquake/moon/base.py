@@ -136,7 +136,7 @@ class Moon(object):
                 'browser.helperApps.neverAsk.saveToDisk',
                 'text/csv,text/xml,application/zip,image/png')
 
-            if sel_vers_maj > 2:
+            if sel_vers_maj > 2 and sel_vers_maj < 4:
                 caps = webdriver.common.desired_capabilities
                 firefox_capabilities = caps.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
@@ -150,9 +150,9 @@ class Moon(object):
                 # driver.set_window_position(0, 0)
                 # driver.set_window_size(1024, 742)
 
-            if sel_vers_maj > 3:
+            if sel_vers_maj >= 4:
                 options = FirefoxOptions()
-                driver = webdriver.Remote(cloud_url, options=options)
+                driver = webdriver.Firefox(options=options)
         else:
             driver = None
 
