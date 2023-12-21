@@ -531,7 +531,7 @@ class Moon(object):
         def link_has_gone_stale():
             try:
                 # poll the link with an arbitrary call
-                element.find_elements('doesnt-matter')
+                element.find_elements_by_id('doesnt-matter')
                 return False
             except StaleElementReferenceException:
                 deslashed = self.driver.current_url.rstrip('/')
@@ -682,7 +682,7 @@ class Moon(object):
         while True:
             win_cur = self.current_window_handle()
             for handle in self.driver.window_handles:
-                self.switch_to_window(handle)
+                self.switch_to.window(handle)
                 if is_regex is True:
                     if re.search(title, self.driver.title):
                         return True
