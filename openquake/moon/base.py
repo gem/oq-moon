@@ -682,7 +682,7 @@ class Moon(object):
         while True:
             win_cur = self.current_window_handle()
             for handle in self.driver.window_handles:
-                self.switch_to_window(handle)
+                self.switch_to.window(handle)
                 if is_regex is True:
                     if re.search(title, self.driver.title):
                         return True
