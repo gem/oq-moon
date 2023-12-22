@@ -152,6 +152,14 @@ class Moon(object):
 
             if sel_vers_maj >= 4:
                 options = FirefoxOptions()
+                options.set_preference("browser.download.folderList", 2)
+                options.set_preference(
+                   'browser.download.manager.showWhenStarting', False)
+                options.set_preference("browser.download.dir", os.path.join(
+                   os.path.expanduser("~"), Moon.DOWNLOAD_DIRNAME))
+                options.set_preference(
+                   'browser.helperApps.neverAsk.saveToDisk',
+                   'text/csv,text/xml,application/zip,image/png')
                 driver = webdriver.Firefox(options=options)
         else:
             driver = None
