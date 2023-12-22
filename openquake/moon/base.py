@@ -24,7 +24,8 @@ import shutil
 from .utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 
@@ -690,7 +691,7 @@ class Moon(object):
         while True:
             win_cur = self.current_window_handle()
             for handle in self.driver.window_handles:
-                self.switch_to.window(handle)
+                self.switch_to_window(handle)
                 if is_regex is True:
                     if re.search(title, self.driver.title):
                         return True
@@ -703,12 +704,12 @@ class Moon(object):
             else:
                 break
 
-        self.switch_to.window(win_cur)
+        self.switch_to_window(win_cur)
         raise ValueError
 
     def select_main_window(self):
         if self.main_window:
-            self.switch_to.window(self.main_window)
+            self.switch_to_window(self.main_window)
 
     def windows_reset(self):
         if self.driver is None:
@@ -731,7 +732,8 @@ class Moon(object):
         return self.driver.current_window_handle
 
     def switch_to_alert(self):
-        return self.driver.switch_to.alert()
+        wait = WebDriverWait(self.driver, timeout=2)
+        return wait.until(EC.alert_is_present())
 
     def switch_to_window(self, handle):
         return self.driver.switch_to.window(handle)
