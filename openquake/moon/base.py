@@ -539,7 +539,7 @@ class Moon(object):
         def link_has_gone_stale():
             try:
                 # poll the link with an arbitrary call
-                element.find_elements_by_id('doesnt-matter')
+                element.find_elements(By.ID, 'doesnt-matter')
                 return False
             except StaleElementReferenceException:
                 deslashed = self.driver.current_url.rstrip('/')
@@ -679,7 +679,7 @@ class Moon(object):
 
     @staticmethod
     def select_item_set(sel_obj, name):
-        for option in sel_obj.find_elements_by_tag_name('option'):
+        for option in sel_obj.find_elements(By.TAG_NAME, 'option'):
             if option.text == name:
                 option.click()  # select() in earlier versions of webdriver
                 break
