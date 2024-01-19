@@ -732,8 +732,7 @@ class Moon(object):
         return self.driver.current_window_handle
 
     def switch_to_alert(self):
-        wait = WebDriverWait(self.driver, timeout=2)
-        return wait.until(EC.alert_is_present())
+        return EC.alert_is_present()
 
     def switch_to_window(self, handle):
         return self.driver.switch_to.window(handle)
