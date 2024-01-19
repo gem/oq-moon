@@ -24,7 +24,9 @@ import shutil
 from .utils import TimeoutError, NotUniqError, wait_for
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 
 
 class Moon(object):
@@ -135,7 +137,7 @@ class Moon(object):
                 'browser.helperApps.neverAsk.saveToDisk',
                 'text/csv,text/xml,application/zip,image/png')
 
-            if sel_vers_maj > 2:
+            if sel_vers_maj > 2 and sel_vers_maj < 4:
                 caps = webdriver.common.desired_capabilities
                 firefox_capabilities = caps.DesiredCapabilities.FIREFOX
                 firefox_capabilities['marionette'] = True
@@ -148,8 +150,18 @@ class Moon(object):
                 # screencast: set window position and size when required
                 # driver.set_window_position(0, 0)
                 # driver.set_window_size(1024, 742)
-            else:
-                driver = webdriver.Firefox(firefox_profile=fp)
+
+            if sel_vers_maj >= 4:
+                options = FirefoxOptions()
+                options.set_preference("browser.download.folderList", 2)
+                options.set_preference(
+                   'browser.download.manager.showWhenStarting', False)
+                options.set_preference("browser.download.dir", os.path.join(
+                   os.path.expanduser("~"), Moon.DOWNLOAD_DIRNAME))
+                options.set_preference(
+                   'browser.helperApps.neverAsk.saveToDisk',
+                   'text/csv,text/xml,application/zip,image/png')
+                driver = webdriver.Firefox(options=options)
         else:
             driver = None
 
@@ -184,7 +196,7 @@ class Moon(object):
         if not self.main_window:
             self.main_window = self.current_window_handle()
             try:
-                self.driver.switch_to_window(self.main_window)
+                self.driver.switch_to.window(self.main_window)
             except WebDriverException:
                 self.main_window = None
 
@@ -528,7 +540,7 @@ class Moon(object):
         def link_has_gone_stale():
             try:
                 # poll the link with an arbitrary call
-                element.find_elements_by_id('doesnt-matter')
+                element.find_elements(By.ID, 'doesnt-matter')
                 return False
             except StaleElementReferenceException:
                 deslashed = self.driver.current_url.rstrip('/')
@@ -668,7 +680,7 @@ class Moon(object):
 
     @staticmethod
     def select_item_set(sel_obj, name):
-        for option in sel_obj.find_elements_by_tag_name('option'):
+        for option in sel_obj.find_elements(By.TAG_NAME, 'option'):
             if option.text == name:
                 option.click()  # select() in earlier versions of webdriver
                 break
@@ -720,7 +732,7 @@ class Moon(object):
         return self.driver.current_window_handle
 
     def switch_to_alert(self):
-        return self.driver.switch_to_alert()
+        return self.driver.switch_to.alert()
 
     def switch_to_window(self, handle):
-        return self.driver.switch_to_window(handle)
+        return self.driver.switch_to.window(handle)
