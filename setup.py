@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# Copyright (C) 2016 GEM Foundation
+# Copyright (C) 2016-2026 GEM Foundation
 #
 # OpenQuake Moon (oq-moon) is free software: you can redistribute it
 # and/or modify it under the terms of the GNU Affero General Public License
@@ -34,24 +34,22 @@ def get_version():
         sys.exit('__version__ variable not found in %s' % package_init)
 
     return version
-version = get_version()
 
-url = "http://github.com/gem/oq-moon"
-
-README = """
+DESCRIPTION = """
 openquake.moon is a selenium wrapper to handle more confortably tests.
 
 Copyright (C) 2016 GEM Foundation
 """
 
+
 setup(
     name='openquake.moon',
-    version=version,
+    version=get_version(),
     description="openquake.moon is a selenium wrapper to handle"
     " more confortably tests.",
-    long_description=README,
-    url=url,
-    packages=find_packages(exclude=['tests', 'tests.*']),
+    long_description=DESCRIPTION,
+    url="http://github.com/gem/oq-moon",
+    # packages=find_packages(include=["openquake.*"], exclude=['tests', 'tests.*']),
     install_requires=[
         'selenium'
     ],
@@ -59,18 +57,8 @@ setup(
     author_email='devops@openquake.org',
     maintainer='GEM Foundation',
     maintainer_email='devops@openquake.org',
-    classifiers=(
-        'Development Status :: 4 - Beta',
-        'Intended Audience :: Education',
-        'Intended Audience :: Science/Research',
-        'License :: OSI Approved :: GNU Affero General Public License v3',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Topic :: Scientific/Engineering',
-    ),
     keywords="selenium test",
     license="AGPL3",
     platforms=["any"],
-    namespace_packages=['openquake'],
     zip_safe=False,
 )
