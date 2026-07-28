@@ -7,7 +7,7 @@ name = 'openquake.moon'
 dynamic = ['version']
 
 dependencies = [
-  'selenium ~= 3.141.0'
+  'selenium ~= 4.46.0'
 ]
 
 requires-python = '>=3'
