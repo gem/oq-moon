@@ -4,6 +4,9 @@ BRANCH_ID="$1"
 
 #display each command before executing it
 set -x
+echo '.gem_init.sh'
+cat .gem_init.sh
+
 . .gem_init.sh
 
 #apt-get update/upgrade
@@ -14,10 +17,13 @@ sudo apt-get -y upgrade
 exec_test () {    
     #install selenium,pip,geckodriver,clone oq-moon and execute tests with nose 
     sudo apt-get -y install python-pip bc
-    sudo pip install --upgrade pip
-    sudo pip install nose
+    python3 -m venv venv
+    . ./venv/bin/activate
+    echo VIRTUAL_ENV: $VIRTUAL_ENV
+    pip install --upgrade pip
+    pip install nose
 
-    wget "http://ftp.openquake.org/common/selenium-deps"
+    wget "http://ftp.openquake.org/common/selenium-deps-2026"
     GEM_FIREFOX_VERSION="$(dpkg-query --show -f '${Version}' firefox)"
     . selenium-deps
     wget "http://ftp.openquake.org/mirror/mozilla/geckodriver-v${GEM_GECKODRIVER_VERSION}-linux64.tar.gz"
