@@ -3,8 +3,8 @@ import atexit
 
 import sys, os, time
 import threading
-from SimpleHTTPServer import SimpleHTTPRequestHandler
-from BaseHTTPServer import HTTPServer
+from http.server import SimpleHTTPRequestHandler 
+from http.server import HTTPServer
 
 PUBLIC_DIRECTORY = os.path.join(os.path.dirname(__file__), 'webpages')
 
