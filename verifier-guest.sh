@@ -31,6 +31,7 @@ exec_test () {
     sudo cp geckodriver /usr/local/bin
     # selenium arrives from oq-moon deps
     # pip install -U selenium==${GEM_SELENIUM_VERSION}
+    pip install $HOME/$GEM_GIT_PACKAGE
 
     cp $GEM_GIT_PACKAGE/openquake/moon/test/config/moon_config.py.tmpl $GEM_GIT_PACKAGE/openquake/moon/test/config/moon_config.py
     export DISPLAY=:1
