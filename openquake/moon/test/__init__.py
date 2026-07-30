@@ -46,8 +46,9 @@ def setup_package():
 #    pla.fini()
 
 def my_at_exit():
-    _httpserver.shutdown()
-    _httpserver_thread.join(5)
+    if _httpserver:
+        _httpserver.shutdown()
+        _httpserver_thread.join(5)
     pla.fini()
 
 atexit.register(my_at_exit)
