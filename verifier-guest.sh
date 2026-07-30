@@ -25,7 +25,7 @@ exec_test () {
 
     wget "http://ftp.openquake.org/common/selenium-deps-2026"
     GEM_FIREFOX_VERSION="$(dpkg-query --show -f '${Version}' firefox)"
-    . selenium-deps
+    . selenium-deps-2026
     wget "http://ftp.openquake.org/mirror/mozilla/geckodriver-v${GEM_GECKODRIVER_VERSION}-linux64.tar.gz"
     tar zxvf "geckodriver-v${GEM_GECKODRIVER_VERSION}-linux64.tar.gz"
     sudo cp geckodriver /usr/local/bin
