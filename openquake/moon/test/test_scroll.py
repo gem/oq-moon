@@ -5,7 +5,7 @@ from openquake.moon.test import pla
 from selenium.webdriver.common.keys import Keys
 
 class ScrollTest(unittest.TestCase):
-    def scroll_to_a_test(self):
+    def test_scroll_to_a(self):
         pla.get('/scroll_test.html')
 
         hyperlink_res = pla.xpath_finduniq("//div[@id='hyperlink-click']",
