@@ -16,7 +16,7 @@ sudo apt-get -y upgrade
 #function complete procedure for tests
 exec_test () {    
     #install selenium,pip,geckodriver,clone oq-moon and execute tests with nose 
-    sudo apt-get -y install python-pip bc python3-venv
+    sudo apt-get -y install python3-pip bc python3-venv
     python3 -m venv venv
     . ./venv/bin/activate
     echo VIRTUAL_ENV: $VIRTUAL_ENV
