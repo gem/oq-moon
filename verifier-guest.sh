@@ -37,7 +37,8 @@ exec_test () {
     export DISPLAY=:1
     export PYTHONPATH=$HOME/$GEM_GIT_PACKAGE:$HOME/$GEM_GIT_PACKAGE/openquake/moon/test/config
     err=0
-    python -m openquake.moon.nose_runner --failurecatcher dev -s -v -a '!negate' --with-xunit --xunit-file=xunit-moon-dev.xml $GEM_GIT_PACKAGE/openquake/moon/test || err=1
+    # python -m openquake.moon.nose_runner --failurecatcher dev -s -v -a '!negate' --with-xunit --xunit-file=xunit-moon-dev.xml $GEM_GIT_PACKAGE/openquake/moon/test || err=1
+    pytest -vs $GEM_GIT_PACKAGE/openquake/moon/test || err=1
     for negate_file in screenshot_test; do
         beg_date="$(date "+%d/%b/%Y %H:%M:%S")"
         time_begin="$(date +%s%N)"
