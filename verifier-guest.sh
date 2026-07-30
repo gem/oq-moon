@@ -29,7 +29,8 @@ exec_test () {
     wget "http://ftp.openquake.org/mirror/mozilla/geckodriver-v${GEM_GECKODRIVER_VERSION}-linux64.tar.gz"
     tar zxvf "geckodriver-v${GEM_GECKODRIVER_VERSION}-linux64.tar.gz"
     sudo cp geckodriver /usr/local/bin
-    pip install -U selenium==${GEM_SELENIUM_VERSION}
+    # selenium arrives from oq-moon deps
+    # pip install -U selenium==${GEM_SELENIUM_VERSION}
 
     cp $GEM_GIT_PACKAGE/openquake/moon/test/config/moon_config.py.tmpl $GEM_GIT_PACKAGE/openquake/moon/test/config/moon_config.py
     export DISPLAY=:1
