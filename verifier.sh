@@ -67,8 +67,8 @@ usage () {
 
     echo
     echo "USAGE:"
-    echo "    $0 devtest <branch-name> [<plugins-branch-name>]"
-    echo "                                                 put oq-platform sources in a lxc,"
+    echo "    $0 devtest <branch-name>"
+    echo "                                                 put oq-moon sources in a lxc,"
     echo "                                                 setup environment and run development tests."
     echo "    $0 devtest <branch-name>"
     echo "                                                 development installation and tests."
