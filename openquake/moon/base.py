@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 #
-# Copyright (C) 2016 GEM Foundation
+# Copyright (C) 2016-2026 GEM Foundation
 #
 # OpenQuake Moon (oq-moon) is free software: you can redistribute it
 # and/or modify it under the terms of the GNU Affero General Public License

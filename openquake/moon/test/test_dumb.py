@@ -2,5 +2,5 @@ import unittest
 
 
 class DumbTest(unittest.TestCase):
-    def dumb_test(self):
+    def test_dumb(self):
         pass

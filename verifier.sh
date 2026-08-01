@@ -31,7 +31,7 @@ if [ "$GEM_EPHEM_CMD" = "" ]; then
     GEM_EPHEM_CMD="lxc-copy"
 fi
 if [ "$GEM_EPHEM_NAME" = "" ]; then
-    GEM_EPHEM_NAME="ubuntu16-x11-lxc-eph"
+    GEM_EPHEM_NAME="debian13-x11-lxc-eph"
 fi
 
 LXC_VER=$(lxc-ls --version | cut -d '.' -f 1)
@@ -67,8 +67,8 @@ usage () {
 
     echo
     echo "USAGE:"
-    echo "    $0 devtest <branch-name> [<plugins-branch-name>]"
-    echo "                                                 put oq-platform sources in a lxc,"
+    echo "    $0 devtest <branch-name>"
+    echo "                                                 put oq-moon sources in a lxc,"
     echo "                                                 setup environment and run development tests."
     echo "    $0 devtest <branch-name>"
     echo "                                                 development installation and tests."

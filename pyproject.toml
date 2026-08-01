@@ -1,0 +1,59 @@
+[build-system]
+requires = ['setuptools >= 61.0']
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = 'openquake.moon'
+version = '1.2.0'
+# dynamic = ['version']
+
+dependencies = [
+  'selenium ~= 4.46.0',
+  'pytest ~= 9.0.3',
+]
+
+requires-python = '>=3'
+authors = [
+  {name = 'Matteo Nastasi', email = 'nastasi@openquake.org'},
+]
+maintainers = [
+  {name = 'Matteo Nastasi', email = 'nastasi@openquake.org'},
+]
+description = 'Openquake Moon - selenium wrapper to handle more confortably tests'
+readme = 'README.md'
+license = {file = 'LICENSE'}
+keywords = ['GEM', 'openquake', 'test']
+classifiers=['Development Status :: 4 - Beta',
+             'Intended Audience :: Education',
+             'Intended Audience :: Science/Research',
+             'License :: OSI Approved :: GNU Affero General Public License v3',
+             'Operating System :: OS Independent',
+             'Programming Language :: Python :: 2',
+             'Topic :: Scientific/Engineering',
+            ]
+
+[tool.setuptools]
+# include-package-data = false
+
+[tool.setuptools.packages.find]
+namespaces = true
+include = ['openquake.moon*']
+exclude = ['build']
+
+# [tool.setuptools.dynamic]
+# version = {attr = 'openquake.moon.get_version()'}
+
+[project.urls]
+# Homepage = 'https://example.com'
+# Documentation = 'https://readthedocs.org'
+Repository = 'http://github.com/gem/oq-moon'
+'Bug Tracker' = 'http://github.com/gem/oq-moon/issues'
+# Changelog = 'https://github.com/me/spam/blob/master/CHANGELOG.md'
+
+# [project.optional-dependencies]
+# test = [
+#    'flake8',
+#    'pytest == 8.3.3',
+#    'pytest-cov == 6.0.0'
+# ]
+
