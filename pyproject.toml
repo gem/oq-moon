@@ -33,7 +33,7 @@ classifiers=['Development Status :: 4 - Beta',
 
 [project.optional-dependencies]
 test = [
-    "pytest ~= 9.1.1",
+    "pytest ~= 9.0.3",
 ]
 
 [tool.setuptools]
